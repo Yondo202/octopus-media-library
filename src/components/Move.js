@@ -10,7 +10,7 @@ const Move = ({ setFocus }) => {
                     <div className="input-wrap">
                         <label>Байршил сонгох</label>
                         <select>
-                            <option selected>Media Library</option>
+                            <option selected>Медиа файл</option>
                         </select>
                     </div>
                 </div>
@@ -35,7 +35,7 @@ const Container = styled.div`
             input, select{
                 width: 100%;
                 border-radius: 4px;
-                border: 1px solid ${props=>props.theme.borderColor};
+                border: 1px solid ${props=>props.theme.sectionBorderColor};
                 margin-top:8px;
                 &:focus{
                     outline: none;

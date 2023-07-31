@@ -1,9 +1,8 @@
 import React, { useContext } from 'react';
-import PropTypes from 'prop-types';
 
 const Context = React.createContext();
 
-export const CustomContext = ({ children,jwt, webId, folders, mainUrl }) => {
+export const CustomContext = ({ children, jwt, webId, mainUrl }) => {
     const [loading, setLoading] = React.useState(false);
 
     const mainLoadH = (cond, infinite) => {
@@ -15,17 +14,13 @@ export const CustomContext = ({ children,jwt, webId, folders, mainUrl }) => {
     }
 
     return (
-        <Context.Provider value={{ useLoading: mainLoadH, jwt, loading, webId, folders, mainUrl }} >
+        <Context.Provider value={{ useLoading: mainLoadH, jwt, loading, webId, mainUrl }} >
             {children}
         </Context.Provider>
     );
 };
 
 export default Context
-
-CustomContext.propTypes = {
-    children: PropTypes.any,
-};
 
 export const useLoad = () => {
     return useContext(Context);

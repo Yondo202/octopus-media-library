@@ -1,75 +1,118 @@
-import React from "react";
-import styled from "styled-components";
-import Svg from '../miscs/svg'
+import React from 'react';
+import styled from 'styled-components';
+import Svg from '../miscs/svg';
 
-const Pagination = ({
-    fetch,
-    paginateNumber,
-    setPaginateNumber
-}) => {
-    const currentPage = 1;
-    const totalPages = 5;
-    return (
-        <Container>
-            <div className="pagination-wrap">
-                <div className="icon" onClick={() => fetch(currentPage > 1 ? (currentPage - 1) : 1, paginateNumber)}>
-                    <Svg name="prev" />
-                </div>
-                {new Array(totalPages).fill(Math.random()).map((el, i) => {
-                    if (
-                        (i + 1 > currentPage - 5 && i + 1 <= currentPage + 5) ||
-                        (i + 1 <= 10 && currentPage < 5)
-                    ) {
-                        return (
-                            <div
-                                className={`frame ${currentPage == i + 1 ? "active" : ""}`}
-                                onClick={() => fetch(i + 1, paginateNumber)}
-                                key={i}
-                            >
-                                {i + 1}
-                            </div>
-                        );
+const pages = [ 20, 40, 50 ]
+
+const Pagination = ({ fetchBody, setFetchBody }) => {
+
+    const onChange = (element) =>{
+        setFetchBody((prev) => ({ ...prev, pagination: { ...prev.pagination, size:element.target.value, number:1 } }))
+    }
+
+   return (
+      <Container>
+
+        <div className='select_par'>
+            <select onChange={onChange} value={fetchBody.pagination.size}>
+                <option value={10}>{10}</option>
+                {pages.map((el,ind) => {
+                    if(fetchBody.pagination.total > el){
+                        return <option key={ind}>{el}</option>
                     }
                 })}
-                <div className="icon" onClick={() => fetch(currentPage < totalPages ? (currentPage + 1) : totalPages, paginateNumber)}>
-                    <Svg name="next" />
-                </div>
-            </div>
-        </Container>
-    )
-}
+            </select>
+        </div>
 
-export default Pagination
+         <div className="pagination-wrap">
+            <div
+               className="icon"
+               onClick={() =>
+                  setFetchBody((prev) => ({
+                     ...prev,
+                     pagination: {
+                        ...prev.pagination,
+                        number: fetchBody.pagination.number === 1 ? fetchBody.pagination.number : fetchBody.pagination.number - 1,
+                     },
+                  }))
+               }
+            >
+               <Svg name="prev" />
+            </div>
+            {new Array(Math.ceil((fetchBody.pagination.total ?? 0) / fetchBody.pagination.size))
+               .fill(fetchBody.pagination.number)
+               .map((el, ind) => {
+                  return (
+                     <div
+                        className={`frame ${ind + 1 === fetchBody.pagination.number ? 'active' : ''}`}
+                        // item={el}
+                        onClick={() => setFetchBody((prev) => ({ ...prev, pagination: { ...prev.pagination, number: ind + 1 } }))}
+                        key={ind}
+                     >
+                        {ind + 1}
+                     </div>
+                  );
+               })}
+
+            <div
+               className="icon"
+               onClick={() =>
+                  setFetchBody((prev) => ({
+                     ...prev,
+                     pagination: {
+                        ...prev.pagination,
+                        number:
+                           Math.ceil((fetchBody.pagination.total ?? 0) / fetchBody.pagination.size) <= fetchBody.pagination.number
+                              ? fetchBody.pagination.number
+                              : fetchBody.pagination.number + 1,
+                     },
+                  }))
+               }
+            >
+               <Svg name="next" />
+            </div>
+         </div>
+      </Container>
+   );
+};
+
+export default Pagination;
 
 const Container = styled.div`
-display: flex;
-justify-content: end;
-padding: 30px 0;
-.pagination-wrap{
-    display: flex;
-    gap: 10px;
-    align-items: center;
-    .icon{
-        cursor: pointer;
-        svg{
-            width: 12px;
-            height: 12px;
+   display: flex;
+   justify-content: space-between;
+   padding: 30px 0;
+   .select_par{
+        select{
+            border-radius:${(props) => props.theme.borderRadius};
         }
-    }
-    .frame{
-        padding: 12px 16px;
-        border-radius: 4px;
-        box-shadow: rgba(33, 33, 52, 0.1) 0px 1px 4px;
-        text-decoration: none;
-        display: flex;
-        position: relative;
-        outline: none;
-        cursor: pointer;
-        background: white;
-    }
-    .active {
-      background-color: ${props=>props.theme.mainColor};
-      color: white;
-    }
-}
-`
+   }
+   .pagination-wrap {
+      display: flex;
+      gap: 15px;
+      align-items: center;
+      .icon {
+         cursor: pointer;
+         svg {
+            
+            width: 14px;
+            height: 14px;
+         }
+      }
+      .frame {
+         padding: 12px 16px;
+         border-radius: 4px;
+         box-shadow: rgba(33, 33, 52, 0.1) 0px 1px 4px;
+         text-decoration: none;
+         display: flex;
+         position: relative;
+         outline: none;
+         cursor: pointer;
+         background-color: ${(props) => props.theme.boxBackground};
+      }
+      .active {
+         background-color: ${(props) => props.theme.mainColor};
+         color: white;
+      }
+   }
+`;

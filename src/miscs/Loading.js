@@ -1,6 +1,6 @@
-import styled from 'styled-components'
+import styled, { keyframes } from 'styled-components'
 import React from 'react'
-import LoadingGif from "./loading.gif"
+import LoadingGif from "./loading.svg"
 import { useLoad } from "../context/MediaCtx";
 
 const Loading = ({ withGhost, local }) => {
@@ -14,6 +14,17 @@ const Loading = ({ withGhost, local }) => {
 }
 
 export default Loading
+
+const rotate = keyframes`
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+`;
+
 
 const Container = styled.div`
     height:300px;
@@ -34,6 +45,7 @@ const Container = styled.div`
     
     `}
     img{
-      width:100px;
+      animation: ${rotate} 0.7s linear infinite;
+      width:50px;
     }
 `

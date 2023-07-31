@@ -1,52 +1,17 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import Grid from "./Grid";
-import { config } from "../miscs/config";
 import Loading from "../miscs/Loading";
 import Svg from '../miscs/svg'
 import Filter from "./Filter"; // tur hadgalna
+import { ST } from "../miscs/config";
 import List from "./List";
-import axios from "axios"
 import { useLoad } from "../context/MediaCtx";
-import { Auth } from 'aws-amplify';
+import Pagination from "./Pagination";
 
-// const initial = { key:'home', doc_count:0 }
-// paths:[
-    // { path: }
-// ]
-
-const MainWrapper = ({ setImage, setFocus, data, page, loading }) => {
-    const { webId, useLoading, loading:globLoading, mainUrl } = useLoad()
-    const [ renderData, setRenderData ] = useState({})
+const MainWrapper = ({ setImage, setFocus, data, page, loading, setFetchBody, fetchBody, setData, renderData }) => {
+    const { loading:globLoading } = useLoad()
     const [ grid, setGrid ] = useState(false)
-    const [ route, setRoute ] = useState([])
-
-    const fetch = async (prop) => {
-        useLoading(true)
-        const { signInUserSession: session } = await Auth.currentAuthenticatedUser()
-        const token = { headers: { Authorization: `Bearer ${session.accessToken.jwtToken}`, } }
-        // pagination: { size: size, number: number }
-        try {
-            const res = await axios.post(`${mainUrl}/image/list`, { webId: webId, paths:[ prop ] }, token)
-            setRenderData(res.data.data)
-        } catch (err) {
-            console.log(err, "err")
-        } finally {
-            useLoading(false)
-        }
-    };
-
-    // const renderData = React.useMemo(()=> data ,[loading])
-
-    useEffect(() =>{
-        if(route.length === 0){
-            setRenderData(data)
-        }else{
-            const last = route[route.length - 1]
-            // console.log(route.doc_count)
-            fetch({ path: last.key, order: last.doc_count})
-        }
-    },[loading, route.length])
 
     const toggleClass = () => {
         if (grid === true)
@@ -56,45 +21,46 @@ const MainWrapper = ({ setImage, setFocus, data, page, loading }) => {
     }
 
     const handleFolder = (data) => {
-        setRoute(prev => [ ...prev, data ])
+        setFetchBody(prev=> ({ ...prev, paths: [ ...prev.paths, { path:data.key, doc_count:data.doc_count, order: prev.paths.length + 1 } ] }))
+    }
+    
+    const linkFunc = (data) =>{
+        setFetchBody(prev=> ({ ...prev, paths: [ ...prev.paths.slice(0, prev.paths.findIndex(item=> item.path === data.path) + 1 ), ] }))
     }
 
-    let props = { setFocus, setImage, media: renderData??{}, handleFolder }
+    const editFolder = (data) =>{
+        setFocus({ type: 'folder', data:data })
+    }
+
+    let props = { setFocus, setImage, media: data??{}, handleFolder, editFolder }
 
     // if(page && globLoading) return <Loading local={true} />
-    
+
     return (
         <Container>
             {page ? <PageHead setFocus={setFocus} /> : <ModalHead setFocus={setFocus} />}
 
             <div className={`${!page && `body2`}`}>
-                <div className="route_head">
-                    {route.length !== 0 &&<><div onClick={() =>setRoute([])} className="text">Media</div>
+                <Filter toggleClass={toggleClass} grid={grid} fetchBody={fetchBody} setData={setData} renderData={renderData} />
+
+                {!data?.search && <div className="route_head">
+                    {fetchBody.paths.length !== 0 &&<><div onClick={() =>setFetchBody(prev=>({ ...prev, paths:[] }))} className="text">{ST['home']}</div>
                     <span className="slash">/</span></> }
-                    {route.map((el, ind) =>{
+                    {fetchBody.paths?.map((el, ind) =>{
                         return(
                             <React.Fragment key={ind}>
-                                <div className={`text ${ind === route.length - 1 ?`active`:``}`}>{el.key} </div>
-                                <span className="slash">{ind !== route.length - 1 ?` / `:``}</span>
+                                <div onClick={()=>linkFunc(el)} className={`text ${ind === fetchBody.paths?.length - 1 ?`active`:``}`}>{el.path} </div>
+                                <span className="slash">{ind !== fetchBody.paths?.length - 1 ?` / `:``}</span>
                             </React.Fragment>
                         )
                     })}
-                </div>
-                <Filter toggleClass={toggleClass} grid={grid} />
-                {/* <div className="body">
-                    {selected?.length > 0 &&
-                        <div className="checkbox-wrap">
-                            <p><b>{selected?.length}</b> файл сонгогдсон байна.</p>
-                            <DeleteButton>Устгах</DeleteButton>
-                            <Button onClick={() => setFocus({ type: 'move'})}>Move</Button>
-                        </div>
-                    }
-                </div> */}
+                </div>}
             </div>
-            {/* setDetail, setDetailInfo, detailInfo, */}
+            
             <div className={`${!page && `main`}`}>
                 <div className={`${!page && `media-modal`}`}>
                     {(page && globLoading) ? <Loading local={true} /> : loading ? <Loading local={true} /> : grid ? <List {...props} /> : <Grid {...props} />}
+                    { fetchBody.size < fetchBody.total  && <Pagination fetchBody={fetchBody} setFetchBody={setFetchBody} />}
                 </div>
             </div>
 
@@ -111,7 +77,7 @@ export default MainWrapper
 
 const Container = styled.div`
     .route_head{
-        margin-bottom:8px;
+        margin-bottom:15px;
         display:flex;
         align-items:center;
         margin-left:-12px;
@@ -180,19 +146,19 @@ const Container = styled.div`
                             position: absolute;
                             top: 10px;
                             left: 10px;
-                            background: white;
+                            background: ${props => props.theme.boxBackground};
                             border-radius: 4px;
                             z-index: 1;
-                            border: 1px solid ${props => props.theme.borderColor};
+                            border: 1px solid ${props => props.theme.sectionBorderColor};
                         }
                         .edit{
                             position: absolute;
                             top: 5px;
                             right: 10px;
                             z-index: 2;
-                            border: 1px solid ${props => props.theme.borderColor};
+                            border: 1px solid ${props => props.theme.sectionBorderColor};
                             border-radius: 4px;
-                            background: white;
+                            background: ${props => props.theme.boxBackground};
                             padding: 5px;
                             svg{
                                 border: none;
@@ -204,7 +170,7 @@ const Container = styled.div`
                         .ghost{
                             background: rgb(255, 255, 255);
                             border-radius: 4px;
-                            border: 1px ${props => props.theme.borderColor};
+                            border: 1px ${props => props.theme.sectionBorderColor};
                             box-shadow: rgba(33, 33, 52, 0.1) 0px 1px 4px;
                             height: 100%;
                             .image_sector{
@@ -221,7 +187,7 @@ const Container = styled.div`
                                     justify-content: center;
                                     height: 10.25rem;
                                     width: 100%;
-                                    background: repeating-conic-gradient(rgb(246, 246, 249) 0%, rgb(246, 246, 249) 25%, transparent 0%, transparent 50%) 50% center / 20px 20px;
+                                    background: repeating-conic-gradient(${props=> props.theme.sectionBorderColor} 0%, ${props=> props.theme.sectionBorderColor} 25%, transparent 0%, transparent 50%) 50% center / 20px 20px;
                                     border-top-left-radius: 4px;
                                     border-top-right-radius: 4px;
                                     img{
@@ -239,7 +205,7 @@ const Container = styled.div`
                                 display:flex;
                                 align-items:center;
                                 justify-content:space-between;
-                                background: white;
+                                background: ${props => props.theme.boxBackground};
                                 .info{
                                     .name{
                                         font-weight:500;
@@ -252,7 +218,7 @@ const Container = styled.div`
                                 }
                                 .tag_info{
                                     font-weight:600;
-                                    background-color: white;
+                                    background-color: ${props => props.theme.boxBackground};
                                     padding:5px 9px;
                                     border-radius:4px;
                                     color: ${props => props.theme.lightTextColor};
@@ -288,7 +254,7 @@ const Container = styled.div`
         align-items: center;
         justify-content: space-between;
         padding: 12px 40px 12px 40px;
-        border-bottom: 1px solid ${props => props.theme.borderColor};
+        border-bottom: 1px solid ${props => props.theme.sectionBorderColor};
         .tablist{
             display: flex;
             .tab{
@@ -331,9 +297,9 @@ const Container = styled.div`
 const PageHead = ({ setFocus }) => {
     return (
         <div className="head_title">
-            <div className="text">Media Library</div>
+            <div className="text">Медиа файл</div>
             <div className="button">
-                <Button onClick={() => setFocus({ type: 'folder' })}><Svg name="add" color={config.mainColor} /> Шинэ хавтас үүсгэх</Button>
+                <Button onClick={() => setFocus({ type: 'folder' })}><Svg name="add" /> Шинэ хавтас үүсгэх</Button>
                 <PrimaryButton onClick={() => setFocus({ type: 'upload' })}><Svg name="add" color={"#fff"} /> Шинэ файл нэмэх</PrimaryButton>
             </div>
         </div>
@@ -361,47 +327,50 @@ const Button = styled.div`
     gap: 10px;
     display: flex;
     border-radius: 4px;
-    background: ${props => props.theme.secondaryColor};
+    background: ${props => props.theme.lightMainColor};
     color: ${props => props.theme.mainColor};
     font-weight: 700;
     cursor: pointer;
     font-size: 12px;
 `
 
-const DeleteButton = styled.div`
-    padding:10px 20px;
-    align-items: center;
-    width: fit-content;
-    gap: 10px;
-    display: flex;
-    border-radius: 4px;
-    background: #fcecea;
-    color: #b72b1a;
-    font-weight: 700;
-    border: 1px solid rgb(245, 192, 184);
-    cursor: pointer;
-    font-size: 12px;
-    svg{
-        path{
-            fill: ${props => props.theme.mainColor};
-        }
-    }
-    &:hover{
-        background: white;
-    }
-`
+// const DeleteButton = styled.div`
+//     padding:10px 20px;
+//     align-items: center;
+//     width: fit-content;
+//     gap: 10px;
+//     display: flex;
+//     border-radius: 4px;
+//     background: #fcecea;
+//     color: #b72b1a;
+//     font-weight: 700;
+//     border: 1px solid rgb(245, 192, 184);
+//     cursor: pointer;
+//     font-size: 12px;
+//     svg{
+//         path{
+//             fill: ${props => props.theme.mainColor};
+//         }
+//     }
+//     &:hover{
+//         background: ${props => props.theme.boxBackground};
+//     }
+// `
 export const PrimaryButton = styled.div`
     padding:10px 20px;
     align-items: center;
     gap: 10px;
     display: flex;
     border-radius: 4px;
-    background: white;
-    color: white;
+    background: ${props => props.theme.boxBackground};
+    color: ${props => props.theme.boxBackground};
     font-weight: 700;
     cursor: pointer;
     font-size: 12px;
-    background: ${props => props.theme.mainColor};
+    background: ${props =>  props.theme.mainColor};
+    ${props=>props.danger?`border: 1px solid rgb(245, 192, 184);
+    background: rgb(252, 236, 234);
+    color: rgb(183, 43, 26);`:``}
 `
 
 export const SecondaryButton = styled.div`
@@ -410,12 +379,12 @@ export const SecondaryButton = styled.div`
     gap: 10px;
     display: flex;
     border-radius: 4px;
-    background: white;
+    background: ${props => props.theme.boxBackground};
     color: ${props => props.theme.textColor};
     font-weight: 700;
     cursor: pointer;
     font-size: 12px;
-    border: 1px solid ${props => props.theme.borderColor};
+    border: 1px solid ${props => props.theme.sectionBorderColor};
     &:hover{
         background: rgba(0,0,0,0.037);
     }

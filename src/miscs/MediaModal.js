@@ -1,7 +1,6 @@
 import React from "react";
 import styled, { keyframes } from "styled-components";
 import Svg from "./svg";
-import { config } from "./config";
 
 const Modal = (props) => {
 
@@ -13,9 +12,11 @@ const Modal = (props) => {
                 <div className="main-content">
                     <div className="title">
                         <div className="text">{props.title ?? `Медиа файл`}</div>
-                        <div className="close" onClick={props.onCancel}><Svg name="close" color={config.textColor} /></div>
+                        <div className="close" onClick={props.onCancel}><Svg name="close" color="textColor" /></div>
                     </div>
-                    {props.children}
+                    <div className="content_parent">
+                        {props.children}
+                    </div>
                 </div>
             </div>
         </Container>
@@ -54,18 +55,18 @@ const Container = styled.div`
         top: 45%;
         left: 50%;
         transform: translate(-50%, -50%);
-        background: #fff;
+        background: ${props => props.theme.boxBackground};
         border-radius: 4px;
-        max-width: 1100px;
-        min-width: 900px;
+        max-width: 900px;
+        // min-width: 800px;
+        width: 900px;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
         z-index: 1002;
         .title{
-            width: 100%;
             border-radius: 4px 4px 0px 0px;
-            border-bottom: 1px solid ${props => props.theme.borderColor};
+            border-bottom: 1px solid ${props => props.theme.sectionBorderColor};
             background: ${props => props.theme.gray};
             padding: 16px 20px;
             display: flex;
@@ -77,8 +78,8 @@ const Container = styled.div`
                 font-weight: 700;
             }
             .close{
-                border: 1px solid ${props => props.theme.borderColor};
-                background: white;
+                border: 1px solid ${props => props.theme.sectionBorderColor};
+                background: ${props => props.theme.boxBackground};
                 padding: 8px;
                 border-radius: 4px;
                 display: flex;
@@ -88,8 +89,14 @@ const Container = styled.div`
                 svg{
                     width: 12px;
                     heihgt: 12px;
+                    path{
+                        fill: ${props => props.theme.textColor};
+                    }
                 }
             }
+        }
+        .content_parent{
+            width:100%;
         }
         .main{
             animation:${animate} 0.15s ease;
@@ -97,19 +104,24 @@ const Container = styled.div`
             display: flex;
             flex-direction: column;
             // max-height: calc(100% - 132px);
-            // max-height: 100%;
+            max-height: 100%;
             max-height: 400px;
+            width:100%;
             overflow-y: auto;
         }
         .footer{
-            width: 100%;
             border-radius: 0px 0px 4px 4px;
-            border-top: 1px solid ${props => props.theme.borderColor};
+            border-top: 1px solid ${props => props.theme.sectionBorderColor};
             background: ${props => props.theme.gray};
             padding: 16px 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            .addition{
+                display:flex;
+                gap:20px;
+                align-items: center;
+            }
         }
     }
 }

@@ -1,10 +1,9 @@
 import React from "react";
 import styled from "styled-components";
 import Svg from '../miscs/svg'
-import { config } from "../miscs/config";
 // import Pagination from "./Pagination";
 
-const List = ({ media, setFocus, setImage, handleFolder }) => {
+const List = ({ media, setFocus, setImage, handleFolder, editFolder }) => {
 
     const handleEdit = (data) => {
         setFocus({ type: 'detail', data: data })
@@ -12,7 +11,7 @@ const List = ({ media, setFocus, setImage, handleFolder }) => {
     
     return (
         <Container>
-            {media?.images?.length > 0 &&
+            {(media?.images?.data?.length > 0 ||  media?.folders?.data?.length > 0) &&
                 <table>
                     <thead>
                         <tr>
@@ -26,23 +25,24 @@ const List = ({ media, setFocus, setImage, handleFolder }) => {
                         </tr>
                     </thead>
                     <tbody>
-                        {media.folders?.map((data, i) => (
-                            <tr key={i} onClick={()=>handleFolder(data)}>
+                        {media?.folders?.data?.map((data, i) => (
+                            //onClick={()=>handleFolder(data)} map dotor hii daraa
+                            <tr key={i} >
                                 {/* <td></td> */}
-                                <td>
+                                <td onClick={()=>handleFolder(data)}>
                                     <div className="preview">
                                         <Svg name="folder" color="#6CB7F1" size="24px" />
                                     </div>
                                 </td>
-                                <td>{data.key}</td>
-                                <td style={{ textTransform: "uppercase" }}>Folder</td>
-                                <td style={{ textTransform: "uppercase" }}>57KB</td>
-                                <td>June 26, 2023</td>
-                                <td></td>
+                                <td onClick={()=>handleFolder(data)}>{data.key}</td>
+                                <td onClick={()=>handleFolder(data)} style={{ textTransform: "uppercase" }}>Folder</td>
+                                <td onClick={()=>handleFolder(data)} style={{ textTransform: "uppercase" }}>57KB</td>
+                                <td onClick={()=>handleFolder(data)}>June 26, 2023</td>
+                                <td onClick={() => editFolder(data)}><div className="action_button"><Svg name="edit" color="lightTextColor" size="17px" /></div> </td>
                             </tr>
                         ))}
-                        {media.images?.map((data, i) => (
-                            <tr key={i} onClick={() => setImage?.(data)}>
+                        {media.images?.data?.map((data, i) => (
+                            <tr key={i} onClick={() => setImage?.({ _id:data.id, ...data._source })}>
                                 {/* <td>
                                     {detectSelected(data) ? (
                                         <div className="selected_sign" onClick={() => handleSetSelected(data)}>
@@ -61,15 +61,13 @@ const List = ({ media, setFocus, setImage, handleFolder }) => {
                                 <td style={{ textTransform: "uppercase" }}>{data._source.ext}</td>
                                 <td style={{ textTransform: "uppercase" }}>57KB</td>
                                 <td>June 26, 2023</td>
-                                <td onClick={() => handleEdit(data)}><Svg name="edit" color={config.lightTextColor} size="17px" /></td>
+                                <td onClick={() => handleEdit(data)}><div className="action_button"><Svg name="edit" color="lightTextColor" size="17px" /></div> </td>
                             </tr>
                         ))}
                     </tbody>
-
-
                 </table>
             }
-            {/* <Pagination fetch={fetch} setPaginateNumber={setPaginateNumber} paginateNumber={paginateNumber} /> */}
+            
         </Container>
     )
 }
@@ -78,19 +76,23 @@ export default List
 
 const Container = styled.div`
 width: 100%;
-    background: white;
+background: ${props => props.theme.boxBackground};
     border-radius: 4px;
     padding: 15px 25px;
     box-shadow: rgba(33, 33, 52, 0.1) 0px 1px 4px;
     table{
         width: 100%;
-        background: white;
+        background: ${props => props.theme.boxBackground};
         border-radius: 4px;
+        .action_button{
+            display:flex;
+            justify-content:center;
+        }
         tr{
             th, td{
                 padding: 18px 12px;
                 text-align: left;
-                border-bottom: 1px solid ${props=>props.theme.borderColor};
+                border-bottom: 1px solid ${props=>props.theme.sectionBorderColor};
                 &:first-of-type{
                     padding: 0;
                     padding-left: 10px;
@@ -117,7 +119,7 @@ width: 100%;
                 //     background: white;
                 //     border-radius: 4px;
                 //     z-index: 1;
-                //     border: 1px solid ${props=>props.theme.borderColor};
+                //     border: 1px solid ${props=>props.theme.sectionBorderColor};
                 // }
                 .preview{
                     width: 36px;

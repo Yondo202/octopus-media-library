@@ -1,6 +1,6 @@
 {
-  "name": "Siro media library",
-  "version": "0.1",
+  "name": "siro-media-library",
+  "version": "0.1.1",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.es.js",
@@ -10,7 +10,7 @@
     "build-storybook": "build-storybook",
     "build-lib": "rollup -c"
   },
-  "author": "Nyambayar Saintogtokh",
+  "author": "yondo33",
   "license": "MIT",
   "devDependencies": {
     "@babel/core": "^7.18.9",
@@ -36,10 +36,14 @@
     "styled-components": "^5.3.5"
   },
   "peerDependencies": {
+    "aws-amplify": "^5.2.5",
+    "axios": "^1.2.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "styled-components": "^5.3.5",
-    "axios": "^1.2.2",
-    "aws-amplify": "^5.2.5"
+    "styled-components": "^5.3.5"
+  },
+  "dependencies": {
+    "rollup-plugin-import-css": "^3.3.1",
+    "rollup-plugin-svg": "^2.0.0"
   }
 }
