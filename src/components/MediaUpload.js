@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { SecondaryButton, PrimaryButton } from './MainWrapper';
-import axios from 'axios';
 import ImageCard from '../miscs/ImageCard';
 import Svg from '../miscs/svg';
 import { useLoad } from '../context/MediaCtx';
 import RouteHead from '../miscs/RouteHead';
+import { InsertImage, UploadImage } from '../miscs/UploadFunc';
 
 export const UploadFinal = ({ setFocus, focus, page, setImage, fetchBody }) => {
    const [success, setSuccess] = useState({ data: null, success: false });
@@ -16,33 +16,11 @@ export const UploadFinal = ({ setFocus, focus, page, setImage, fetchBody }) => {
    };
 
    const handleSubmit = async () => {
-      useLoading(true);
-      let formData = new FormData();
-      formData.append('file', focus.data.file);
-      formData.append('type', focus.data.type);
-      formData.append('title', focus.data.title);
-      formData.append('alt', focus.data.alt);
-      if (fetchBody.paths?.length > 0) {
-         formData.append('paths', JSON.stringify(fetchBody.paths));
-      }
-
-      const token = { headers: { 'content-type': 'multipart/form-data', Authorization: `Bearer ${jwt}`, webId: webId } };
-
-      try {
-         const res = await axios.post(`${mainUrl}/image/upload`, formData, token);
-         // messageAlert("Амжилттай хадгалагдлаа");
-         // console.log(res)
-         if (res.data.data) {
-            if (page) {
-               setFocus({ _uploaded_back: true });
-            } else {
-               setSuccess({ data: res.data.data, success: true });
-            }
-         } else {
-            setFocus({ _uploaded_back: true });
-         }
-      } finally {
-         useLoading(false);
+      const { data } = await UploadImage({ focus, fetchBody, mainUrl, jwt, webId, useLoading })
+      if (page) {
+         setFocus({ _uploaded_back: true });
+      } else {
+         setSuccess({ data: data, success: true });
       }
    };
 
@@ -72,29 +50,60 @@ export const UploadFinal = ({ setFocus, focus, page, setImage, fetchBody }) => {
 
 
 const MediaUpload = ({ setFocus }) => {
-   const selectImage = async (file) => {
-      let filEname = file.name?.slice(0, file.name?.lastIndexOf('.'));
-      const acceptedImageTypes = ['image/gif', 'image/jpeg', 'image/png']; //'image/svg+xml' -- server error ogj baigaa
+   const [ dragAsset, setDragAsset ] = useState(false)
 
-      if (!acceptedImageTypes.includes(file.type)) {
-         window.alert('Зөвхөн зураг хавсаргах боломжтой');
-      } else {
-         let imageUrl = URL.createObjectURL(file);
-         const reader = new FileReader();
-         reader.readAsBinaryString(file);
-         reader.onload = function () {
-            const string = btoa(reader.result);
-            let data = { ...file, file: file, type: file.type, url: imageUrl, base64: string, alt: filEname, name: filEname, title:filEname };
-            setFocus({ type: 'finalupload', data: data });
-         };
+   const handleDrop = (event) => {
+      event.preventDefault();
+      setDragAsset(false)
+      // data = JSON.parse(event.dataTransfer.getData('text'));
+      const { files } = event.dataTransfer;
+      if (files.length > 0) {
+         selectImage(files[0])
       }
+   }
+      
+   const handleDragOver = (event) => {
+      event.preventDefault()
+   }
+   
+   const onDragEnter = (event) =>{
+      event.preventDefault();
+      setDragAsset(true)
+   } 
+   
+   // var data = {
+   //    name: 'foobar',
+   //    age: 15 
+   //  };
+
+   // const handleDragStart = (event) => {
+   //    // event.dataTransfer.setData({custom:"----->"}, event.target.id)
+   //    event.dataTransfer.setData('text', JSON.stringify(data))
+   // }
+
+ 
+    
+   const selectImage = async (file) => {
+      const { data } = await InsertImage(file)
+      setFocus({ type: 'finalupload', data: data });
    };
+
+
+   const onDragLeave = (event) => {
+      event.preventDefault();
+      if (event.currentTarget.contains(event.relatedTarget)) return;
+      setDragAsset(false);
+    };
+
 
    return (
       <Container>
          <div className="main">
-            <div className="upload_wrap">
-               <div className="file-input">
+         {/* <div draggable="true"  onDragStart={handleDragStart}>
+            Drag me!
+         </div> */}
+            <div className={`upload_wrap ${dragAsset&&`upload_active`}`}>
+               <div onDragLeave={onDragLeave} onDrop = {handleDrop} onDragOver = {e=>e.preventDefault()} onDragEnter={onDragEnter} className="file_input">
                   <input
                      type="file"
                      name="filename"
@@ -105,8 +114,8 @@ const MediaUpload = ({ setFocus }) => {
                      onChange={(e) => selectImage(e.target.files[0])}
                   />
                   <label className="file-input__label" htmlFor="file-input">
-                     <Svg name="add" />
-                     <span>Файл оруулах</span>
+                     <Svg name="add" size="18px" />
+                     <span>Зөөж болон дарж зураг оруулах боломжтой</span>
                   </label>
                </div>
             </div>
@@ -232,7 +241,7 @@ const Container = styled.div`
          margin: 24px 40px;
          // height: 100%;
          height: 22.25rem;
-         .file-input {
+         .file_input {
             width: 100%;
             height: 100%;
             .file-input__input {
@@ -250,15 +259,22 @@ const Container = styled.div`
                align-items: center;
                justify-content: center;
                flex-direction: column;
-               font-size: 12px;
+               font-size: 13px;
                color: ${(props) => props.theme.textColor};
-               font-weight: 700;
+               font-weight: 500;
                width: 100%;
                height: 100%;
             }
             .file-input__label svg {
                height: 25px;
             }
+         }
+      }
+      .upload_active{
+         border: 2px solid ${(props) => props.theme.mainColor};
+         background: ${(props) => props.theme.lightMainColor};
+         .file_input{
+            opacity:0.4;
          }
       }
    }

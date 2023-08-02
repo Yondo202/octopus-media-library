@@ -1,8 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
 import Svg from '../miscs/svg';
+import { defaultSize } from "../miscs/config";
 
-const pages = [ 20, 40, 50 ]
+const pages = [defaultSize, 20, 40, 50]
 
 const Pagination = ({ fetchBody, setFetchBody }) => {
 
@@ -15,11 +16,8 @@ const Pagination = ({ fetchBody, setFetchBody }) => {
 
         <div className='select_par'>
             <select onChange={onChange} value={fetchBody.pagination.size}>
-                <option value={10}>{10}</option>
                 {pages.map((el,ind) => {
-                    if(fetchBody.pagination.total > el){
-                        return <option key={ind}>{el}</option>
-                    }
+                     return <option key={ind}>{el}</option>
                 })}
             </select>
         </div>
@@ -80,12 +78,17 @@ export default Pagination;
 
 const Container = styled.div`
    display: flex;
+   align-items:center;
    justify-content: space-between;
    padding: 30px 0;
    .select_par{
         select{
             border-radius:${(props) => props.theme.borderRadius};
+            padding:10px;
+            border:1px solid ${props=>props.theme.sectionBorderColor};
+            border-radius:5px;
         }
+        
    }
    .pagination-wrap {
       display: flex;
@@ -100,7 +103,7 @@ const Container = styled.div`
          }
       }
       .frame {
-         padding: 12px 16px;
+         padding: 8px 12px;
          border-radius: 4px;
          box-shadow: rgba(33, 33, 52, 0.1) 0px 1px 4px;
          text-decoration: none;

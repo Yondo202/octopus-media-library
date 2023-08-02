@@ -23,3 +23,4 @@ export const ST = {
     home:'Нүүр'
 }
 
+export const defaultSize = 10

@@ -4,14 +4,14 @@ import axios from 'axios';
 import { useLoad } from '../context/MediaCtx';
 import Svg from '../miscs/svg';
 
-const Filter = ({ grid, toggleClass, fetchBody, setData, renderData }) => {
+const Filter = ({ grid, toggleClass, setSearchData, renderData }) => {
    const [search, setSearch] = useState('');
    const { useLoading, webId, jwt, mainUrl } = useLoad();
 
    const onChangeSearch = (e) => {
       setSearch(e.target.value);
       if (e.target.value.length <= 1) {
-        setData(renderData);
+        setSearchData(renderData);
       }
    };
 
@@ -21,9 +21,9 @@ const Filter = ({ grid, toggleClass, fetchBody, setData, renderData }) => {
       const token = { headers: { Authorization: `Bearer ${jwt}`, webId: webId } };
       try {
          const res = await axios.post(`${mainUrl}/image/search`, { search: search, }, token);
-         setData({folders:[], images:res.data, search:search});
+         setSearchData({folders:[], images:res.data, search:search});
       } catch {
-         setData(renderData);
+         setSearchData(renderData);
       } finally {
          useLoading(false);
       }

@@ -2,9 +2,9 @@ import React from 'react';
 import Svg from './svg';
 import styled from 'styled-components';
 
-const ImageCard = ({ setImage, handleEdit, data }) => {
+const ImageCard = ({ setImage, handleEdit, data, dragable }) => {
    return (
-      <Container >
+      <Container {...dragable}>
          <div className="edit" onClick={() => handleEdit(data)}>
             <Svg name="edit" size="18px" />
          </div>
@@ -26,10 +26,12 @@ const ImageCard = ({ setImage, handleEdit, data }) => {
 export default ImageCard;
 
 const Container = styled.div`
+   user-select:none;
    cursor: pointer;
    grid-column: span 3 / auto;
    width: calc((100% - 45px) / 4);
    position: relative;
+   transition:all 0.2s ease;
    .edit {
       position: absolute;
       display: none;
@@ -66,15 +68,15 @@ const Container = styled.div`
             display: flex;
             -webkit-box-pack: center;
             justify-content: center;
-            height: 10.25rem;
             width: 100%;
+            aspect-ratio: 16 / 9;
             background: repeating-conic-gradient(
                   ${(props) => props.theme.sectionBorderColor} 0%,
                   ${(props) => props.theme.sectionBorderColor} 25%,
                   transparent 0%,
                   transparent 50%
                )
-               50% center / 20px 20px;
+            50% center / 20px 20px;
             border-top-left-radius: 4px;
             border-top-right-radius: 4px;
             img {
@@ -84,6 +86,7 @@ const Container = styled.div`
                width: 100%;
                border-radius: 4px 4px 0 0;
                object-fit: contain;
+               user-drag: none;
             }
          }
       }
@@ -95,7 +98,7 @@ const Container = styled.div`
          justify-content: space-between;
          background: ${(props) => props.theme.boxBackground};
          height: auto;
-         width: 100%;
+         width: auto;
          .name {
             font-weight: 500;
             padding-bottom: 5px;

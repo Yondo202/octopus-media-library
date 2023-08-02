@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { CustomContext } from './context/MediaCtx';
 import styled, { ThemeProvider } from 'styled-components';
-import { config, titles } from './miscs/config';
+import { config, titles, defaultSize } from './miscs/config';
 import FileDetail from './components/FileDetail';
 import Move from './components/Move';
 import Loading from './miscs/Loading';
@@ -20,19 +20,18 @@ const initial = { type: `main`, title: '', data: {}, chain: [{ type: 'main' }] }
 // const mainUrl = "https://content-service.siro.mn"
 // const mainUrl = 'http://192.168.230.160:3003';
 
-
+// theme_asset - localstorage {}
 const mainUrl = "https://content-service.siro.mn"
-const testToken = `eyJraWQiOiJsU2RNcWtQbHFzc0dOVzJUejJkeDMrWjVGejR6U2UrUkFBNFwvanZKRWFcL009IiwiYWxnIjoiUlMyNTYifQ.eyJzdWIiOiJjM2VkMTBiYi1kNTc1LTQ5ZTItODUyMi1kMDcwYzdlOGRiZmEiLCJpc3MiOiJodHRwczpcL1wvY29nbml0by1pZHAuYXAtc291dGhlYXN0LTEuYW1hem9uYXdzLmNvbVwvYXAtc291dGhlYXN0LTFfbDZEUDZaYnV2IiwiY2xpZW50X2lkIjoiMmtiN3VrdnY2Ymk4YnBtZW9nNHYxdjQ4dWYiLCJvcmlnaW5fanRpIjoiZTAyYWMyYmMtZDkyNC00NWY3LWJmZWYtNzQ4ZjAzNTMzOTQ1IiwiZXZlbnRfaWQiOiJkODVlOGJjNC03MGIzLTRlZGEtOTY5OS0yYjMwYjhlYmNhMDQiLCJ0b2tlbl91c2UiOiJhY2Nlc3MiLCJzY29wZSI6ImF3cy5jb2duaXRvLnNpZ25pbi51c2VyLmFkbWluIiwiYXV0aF90aW1lIjoxNjkwNDU2MjU2LCJleHAiOjE2OTA4NTc5MzgsImlhdCI6MTY5MDc3MTUzOCwianRpIjoiMDIzOGJhZmMtZWYwZS00ODYwLWEyMzItMzcyYzAxOWE5OWU0IiwidXNlcm5hbWUiOiI5MDgwMDE1MCJ9.gKkukO2VAH5wzFy70o07qcLYXn8sEb5PZCzIYq984kTv1rDNRelbrg3dLTSmN64nxCjftnvegSqF0D32AJ-zT_aKLBVTRn6fau3oQSkEsF0VyZ9_yrf6zLnN_n4eJshi-RGdxq8iqVzccmpWa5qbAtIKhT3HaxHbPKmR6EudyMTl6yBDjQy8yXjA4KGtX4PWjL1ummRrWyUtljn87KD1zqVOzCzd1JE0kHmxl6V7mY7LYVjMRUzMhWOuq21oYEkvz2XmRHUd37iGpqMO5itHfMvtyRxGeWTmfw1-9IanYNQtsFbKbTbmxcKR4WUV_X_Rj9xIkc3rB7f3ho2KPVDnng`
+const testToken = `eyJraWQiOiJsU2RNcWtQbHFzc0dOVzJUejJkeDMrWjVGejR6U2UrUkFBNFwvanZKRWFcL009IiwiYWxnIjoiUlMyNTYifQ.eyJzdWIiOiJjM2VkMTBiYi1kNTc1LTQ5ZTItODUyMi1kMDcwYzdlOGRiZmEiLCJpc3MiOiJodHRwczpcL1wvY29nbml0by1pZHAuYXAtc291dGhlYXN0LTEuYW1hem9uYXdzLmNvbVwvYXAtc291dGhlYXN0LTFfbDZEUDZaYnV2IiwiY2xpZW50X2lkIjoiMmtiN3VrdnY2Ymk4YnBtZW9nNHYxdjQ4dWYiLCJvcmlnaW5fanRpIjoiNzU4MzRhMjYtZDkyNy00YzFjLTgzNjUtZTY5MjA5YzY2ZGQ2IiwiZXZlbnRfaWQiOiI1M2E4ZDIyMy1lMmZiLTQ1MzQtOWI1Ny00ZDNkNjNlZGFmOWIiLCJ0b2tlbl91c2UiOiJhY2Nlc3MiLCJzY29wZSI6ImF3cy5jb2duaXRvLnNpZ25pbi51c2VyLmFkbWluIiwiYXV0aF90aW1lIjoxNjkwOTU4NzIyLCJleHAiOjE2OTEwNDUxMjIsImlhdCI6MTY5MDk1ODcyMiwianRpIjoiYTFmNTBmZTQtZjIyZi00YWFkLTg1MGEtN2Y0ZDcxZWI3M2ZkIiwidXNlcm5hbWUiOiI5MDgwMDE1MCJ9.WNuDZ7JCQkz4SvTHlvIHp4_jjek5aq4cAZTOZYRoU2osk2IGErYSFFhZ0ILoigc3Hg6QeMjO9O8VRrH36Hwpy3Q1pXT8TbzFBr4j4R54QqymbEjRcJfSuzildx4GbNBWiA-srDfY_ujhF5Ty5mjjlDm4_Ex1v2HFTdssb55UqD0A2gc2m-FH95mPDjdLdt_SbdTl1Xaxo-sapaFO-X3WoD73XQhoIOOeM15UmyrKcmpZXn7m7QReM6q-oBjZb_WS0tSM_3EiiKukSXA4OHGuMR_eTZk3EvHyeT1YmzVRXE7UHMRQCx7BX5IJRcXMm5bZyDBVQ8tkgb_IzIv1nGXXDw`
 const testWebid = `c795bdf9-8f8d-4fe0-b6c1-662a5ce2b840`
-const testOpenState = true
 
-const MediaIndex = ({ page, setImage, onCancel, open = testOpenState, webId = testWebid, accessToken = testToken, theme }) => {
+const MediaIndex = ({ page = false, setImage, onCancel, open = false, webId = testWebid, accessToken = testToken, theme }) => {
    const [loading, setLoading] = useState(false); // use global load
    const [focus, setFocusState] = useState(initial);
-   const [ data, setData] = useState({});
+   const [ searchData, setSearchData] = useState({});
    const [ renderData, setRenderData ] = useState({})
    // , sort: { column: "createdAt", order:'0' }
-   const [fetchBody, setFetchBody] = useState({ paths: [], pagination: { size: 10, number: 1 } });
+   const [fetchBody, setFetchBody] = useState({ paths: [], pagination: { size: defaultSize, number: 1 } });
 
    // webId -- damjuuldag bolno
    const setFocus = (data) => {
@@ -55,10 +54,10 @@ const MediaIndex = ({ page, setImage, onCancel, open = testOpenState, webId = te
       try {
          if(prop?.search){
             const res = await axios.post(`${mainUrl}/image/search`, {search:prop.search}, token);
-            setData({ images:{ data:res.data.data }, search:prop.search });
+            setSearchData({ images:{ data:res.data.data }, search:prop.search });
          }else{
-            const res = await axios.post(`${mainUrl}/image/list`, fetchBody, token);
-            setData(res.data.data);
+            const res = await axios.post(`${mainUrl}/image/list`, { ...fetchBody, sort: { column: "createdAt", order:'desc' } }, token);
+            setSearchData(res.data.data);
             setRenderData(res.data.data)
             setFetchBody((prev) => ({ ...prev, pagination: res.data.data.images?.pagination }));
          }
@@ -85,10 +84,10 @@ const MediaIndex = ({ page, setImage, onCancel, open = testOpenState, webId = te
             if (!focus._uploaded_back) {
                onCancel?.(false);
             } else {
-               fetch(data);
+               fetch(searchData);
             }
          } else if (page && focus._uploaded_back) {
-            fetch(data);
+            fetch(searchData);
          }
       }).then(setFocusState(initial));
    }, [focus._back, focus._uploaded_back]);
@@ -96,7 +95,7 @@ const MediaIndex = ({ page, setImage, onCancel, open = testOpenState, webId = te
    const Details = {
       main: {
          Component: (props) => <MainWrapper {...props} />,
-         page, data, setImage, loading, setFetchBody, fetchBody, setData, renderData
+         page, searchData, setImage, loading, setFetchBody, fetchBody, setSearchData, renderData
       },
       detail: { Component: (props) => <FileDetail {...props} />, focus, fetchBody },
       upload: { Component: (props) => <MediaUpload {...props} /> },
@@ -107,8 +106,10 @@ const MediaIndex = ({ page, setImage, onCancel, open = testOpenState, webId = te
 
    const ctxProps = { mainUrl:mainUrl, webId:webId , jwt:accessToken }
 
+   const themes = useMemo(() => JSON.parse(localStorage.getItem('theme_asset')),[])
+
    return (
-      <ThemeProvider theme={theme?.theme ?? config}>
+      <ThemeProvider theme={{ ...config, ...themes }}>
          <CustomContext {...ctxProps} >
             <Container page={page}>
                {!webId && page ? <Error /> : page && Details['main'].Component({ ...Details['main'], setFocus })}

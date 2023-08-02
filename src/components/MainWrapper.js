@@ -4,12 +4,12 @@ import Grid from "./Grid";
 import Loading from "../miscs/Loading";
 import Svg from '../miscs/svg'
 import Filter from "./Filter"; // tur hadgalna
-import { ST } from "../miscs/config";
+import { ST, defaultSize } from "../miscs/config";
 import List from "./List";
 import { useLoad } from "../context/MediaCtx";
 import Pagination from "./Pagination";
 
-const MainWrapper = ({ setImage, setFocus, data, page, loading, setFetchBody, fetchBody, setData, renderData }) => {
+const MainWrapper = ({ setImage, setFocus, searchData, page, loading, setFetchBody, fetchBody, setSearchData, renderData }) => {
     const { loading:globLoading } = useLoad()
     const [ grid, setGrid ] = useState(false)
 
@@ -32,7 +32,7 @@ const MainWrapper = ({ setImage, setFocus, data, page, loading, setFetchBody, fe
         setFocus({ type: 'folder', data:data })
     }
 
-    let props = { setFocus, setImage, media: data??{}, handleFolder, editFolder }
+    let props = { setFocus, setImage, media: searchData??{}, handleFolder, editFolder, fetchBody }
 
     // if(page && globLoading) return <Loading local={true} />
 
@@ -41,9 +41,9 @@ const MainWrapper = ({ setImage, setFocus, data, page, loading, setFetchBody, fe
             {page ? <PageHead setFocus={setFocus} /> : <ModalHead setFocus={setFocus} />}
 
             <div className={`${!page && `body2`}`}>
-                <Filter toggleClass={toggleClass} grid={grid} fetchBody={fetchBody} setData={setData} renderData={renderData} />
+                <Filter toggleClass={toggleClass} grid={grid} fetchBody={fetchBody} setSearchData={setSearchData} renderData={renderData} />
 
-                {!data?.search && <div className="route_head">
+                {!searchData?.search && <div className="route_head">
                     {fetchBody.paths.length !== 0 &&<><div onClick={() =>setFetchBody(prev=>({ ...prev, paths:[] }))} className="text">{ST['home']}</div>
                     <span className="slash">/</span></> }
                     {fetchBody.paths?.map((el, ind) =>{
@@ -59,8 +59,9 @@ const MainWrapper = ({ setImage, setFocus, data, page, loading, setFetchBody, fe
             
             <div className={`${!page && `main`}`}>
                 <div className={`${!page && `media-modal`}`}>
-                    {(page && globLoading) ? <Loading local={true} /> : loading ? <Loading local={true} /> : grid ? <List {...props} /> : <Grid {...props} />}
-                    { fetchBody.size < fetchBody.total  && <Pagination fetchBody={fetchBody} setFetchBody={setFetchBody} />}
+                    {/* list heseg martagdsan baina table iin medeellud bolohn edit */}
+                    {(page && globLoading) ? <Loading local={true} /> : loading ? <Loading local={true} /> : grid ? <List {...props} /> : <Grid {...props} />} 
+                    { fetchBody.pagination?.total > defaultSize && !searchData?.search && <Pagination fetchBody={fetchBody} setFetchBody={setFetchBody} />}
                 </div>
             </div>
 
@@ -332,6 +333,7 @@ const Button = styled.div`
     font-weight: 700;
     cursor: pointer;
     font-size: 12px;
+    border: 1px solid ${props => props.theme.sectionBorderColor};
 `
 
 // const DeleteButton = styled.div`

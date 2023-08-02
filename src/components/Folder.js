@@ -47,7 +47,6 @@ const Folder = ({ setFocus, focus, fetchBody }) => {
       }
    };
 
-
    const onChange = (value) => {
       setNewFolder({ path:value, order:fetchBody.paths?.length + 1 })
    };
