@@ -3,6 +3,7 @@ import resolve from '@rollup/plugin-node-resolve';
 import external from 'rollup-plugin-peer-deps-external';
 import css from "rollup-plugin-import-css";
 import svg from 'rollup-plugin-svg'
+import image from '@rollup/plugin-image';
 
 export default [
   {
@@ -27,7 +28,8 @@ export default [
       resolve(),
       // terser(),
       svg(),
-      css()
+      css(),
+      image()
     ]
   }
 ];

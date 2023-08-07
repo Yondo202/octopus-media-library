@@ -31,7 +31,7 @@ export const UploadFinal = ({ setFocus, focus, page, setImage, fetchBody }) => {
             <div className={`files ${success.success ? `files_success`:``} `}>
                <ImageCard data={focus.data} handleEdit={handleEdit} />
                {success.success && <div className='aftersuccess'>
-                  <span>Амжилттай </span> <Svg name="check" color="limegreen" size="22px" />
+                  <span className='text'>Амжилттай </span> <Svg name="check" color="limegreen" size="22px" />
                </div>}
             </div>
          </div>
@@ -57,44 +57,36 @@ const MediaUpload = ({ setFocus }) => {
       setDragAsset(false)
       // data = JSON.parse(event.dataTransfer.getData('text'));
       const { files } = event.dataTransfer;
+      console.log(files, "heey")
       if (files.length > 0) {
          selectImage(files[0])
+         // if(files.length === 1){
+         //    selectImage(files[0])
+         // }else{
+         //    files.forEach(element => {
+         //       if(acceptedImageTypes.includes(element.type)){
+         //          selectImage(element)
+         //       }
+         //    });
+         // }
       }
    }
-      
-   const handleDragOver = (event) => {
-      event.preventDefault()
-   }
-   
+
    const onDragEnter = (event) =>{
       event.preventDefault();
       setDragAsset(true)
    } 
-   
-   // var data = {
-   //    name: 'foobar',
-   //    age: 15 
-   //  };
 
-   // const handleDragStart = (event) => {
-   //    // event.dataTransfer.setData({custom:"----->"}, event.target.id)
-   //    event.dataTransfer.setData('text', JSON.stringify(data))
-   // }
-
- 
-    
    const selectImage = async (file) => {
       const { data } = await InsertImage(file)
       setFocus({ type: 'finalupload', data: data });
    };
 
-
    const onDragLeave = (event) => {
       event.preventDefault();
       if (event.currentTarget.contains(event.relatedTarget)) return;
       setDragAsset(false);
-    };
-
+   };
 
    return (
       <Container>
@@ -178,7 +170,7 @@ const ContainerFinal = styled.div`
             position:absolute;
             top:-20px;
             right:12px;
-            background: ${(props) => props.theme.gray};
+            background: ${(props) => props.theme.bodyBackground};
             z-index:2;
             padding:5px 15px;
             font-weight:500;
@@ -186,8 +178,10 @@ const ContainerFinal = styled.div`
             align-items:center;
             gap:10px;
             transform:scale(0);
+            .text{
+               color:limegreen;
+            }
          }
-
       }
       .files_success{
          border:1px solid green;
@@ -204,7 +198,7 @@ const Container = styled.div`
          width: 100%;
          border-radius: 4px 4px 0px 0px;
          border-bottom: 1px solid ${(props) => props.theme.sectionBorderColor};
-         background: ${(props) => props.theme.gray};
+         background: ${(props) => props.theme.bodyBackground};
          padding: 16px 20px;
          display: flex;
          justify-content: space-between;

@@ -67,7 +67,7 @@ const Container = styled.div`
         .title{
             border-radius: 4px 4px 0px 0px;
             border-bottom: 1px solid ${props => props.theme.sectionBorderColor};
-            background: ${props => props.theme.gray};
+            background: ${props => props.theme.bodyBackground};
             padding: 16px 20px;
             display: flex;
             justify-content: space-between;
@@ -108,11 +108,12 @@ const Container = styled.div`
             max-height: 400px;
             width:100%;
             overflow-y: auto;
+            scroll-behavior: smooth;
         }
         .footer{
             border-radius: 0px 0px 4px 4px;
             border-top: 1px solid ${props => props.theme.sectionBorderColor};
-            background: ${props => props.theme.gray};
+            background: ${props => props.theme.bodyBackground};
             padding: 16px 20px;
             display: flex;
             justify-content: space-between;

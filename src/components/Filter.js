@@ -81,6 +81,7 @@ const Container = styled.div`
             border: none;
             padding-left: 10px;
             background: transparent;
+            color:${props=>props.theme.textColor};
             &:focus {
                outline: none;
             }

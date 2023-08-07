@@ -300,8 +300,8 @@ const PageHead = ({ setFocus }) => {
         <div className="head_title">
             <div className="text">Медиа файл</div>
             <div className="button">
-                <Button onClick={() => setFocus({ type: 'folder' })}><Svg name="add" /> Шинэ хавтас үүсгэх</Button>
-                <PrimaryButton onClick={() => setFocus({ type: 'upload' })}><Svg name="add" color={"#fff"} /> Шинэ файл нэмэх</PrimaryButton>
+                <Button onClick={() => setFocus({ type: 'folder' })}><Svg name="add" size="0.7rem" /> Шинэ хавтас үүсгэх</Button>
+                <PrimaryButton onClick={() => setFocus({ type: 'upload' })}><Svg name="add" size="0.7rem" color={"#fff"} /> Шинэ файл нэмэх</PrimaryButton>
             </div>
         </div>
     )
@@ -359,6 +359,7 @@ const Button = styled.div`
 //     }
 // `
 export const PrimaryButton = styled.div`
+    position:relative;
     padding:10px 20px;
     align-items: center;
     gap: 10px;
@@ -366,7 +367,7 @@ export const PrimaryButton = styled.div`
     border-radius: 4px;
     background: ${props => props.theme.boxBackground};
     color: ${props => props.theme.boxBackground};
-    font-weight: 700;
+    font-weight: 600;
     cursor: pointer;
     font-size: 12px;
     background: ${props =>  props.theme.mainColor};

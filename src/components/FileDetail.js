@@ -76,6 +76,8 @@ const Detail = ({ focus, setFocus, fetchBody }) => {
 
 export default Detail
 
+
+
 const Container = styled.div`
     .main-detail{
         display: flex;

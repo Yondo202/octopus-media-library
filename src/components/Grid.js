@@ -4,8 +4,9 @@ import Svg from "../miscs/svg";
 import { SecondaryButton } from "./MainWrapper";
 import { useLoad } from '../context/MediaCtx';
 import FileImg from "../miscs/img/image.png"
+// import axios from "axios";
 import ImageCard from "../miscs/ImageCard";
-import { InsertImage, UploadImage } from '../miscs/UploadFunc';
+import { InsertImage, UploadImage, acceptedImageTypes } from '../miscs/UploadFunc';
 // import Pagination from "./Pagination"; // footer baigaa
 
 const initial = { active: false, loading: false };
@@ -14,19 +15,24 @@ const Grid = ({ setFocus, setImage, media, handleFolder, editFolder, fetchBody }
   const { useLoading, webId, jwt, mainUrl } = useLoad();
   const dragImage = React.useRef()
   const [dragAsset, setDragAsset] = useState(initial);
+  const [ dragDirect, setDragDirect ] = useState(false)
+  // const [ ]
   const handleEdit = (data) => {
     setFocus({ type: "detail", data: data });
   };
+
   React.useEffect(() => {
     const img = document.createElement('img')
     img.src = FileImg
     dragImage.current = img
   }, [])
+
   const selectImage = async (file) => {
     try{
       const { data } = await InsertImage(file)
-      await UploadImage({ focus:{ data:data }, fetchBody, mainUrl, jwt, webId, useLoading })
+      const { data: uploadedData } = await UploadImage({ focus:{ data:data }, fetchBody, mainUrl, jwt, webId, useLoading })
       setFocus({ _uploaded_back: true });
+      return uploadedData
     }finally{
       console.log("finish anyway")
     }
@@ -38,6 +44,16 @@ const Grid = ({ setFocus, setImage, media, handleFolder, editFolder, fetchBody }
     const { files } = event.dataTransfer;
     if (files.length > 0) {
       selectImage(files[0])
+      // if(files.length === 1){
+      //   selectImage(files[0])
+      // }else{
+      //   Object.keys(files).forEach(element => {
+      //       if(acceptedImageTypes.includes(files[element].type)){
+      //         let data = selectImage( files[element])
+      //         console.log(data)
+      //       }
+      //   });
+      // }
     }
   };
 
@@ -67,7 +83,6 @@ const Grid = ({ setFocus, setImage, media, handleFolder, editFolder, fetchBody }
   const FolderDragEnter = (ev, id) =>{
     ev.preventDefault();
     reset()
-
     const el  = document.querySelector(`.folder_card${id}`)
     el.style.border = "1px solid blue"
     el.style.opacity = "1"
@@ -79,28 +94,71 @@ const Grid = ({ setFocus, setImage, media, handleFolder, editFolder, fetchBody }
     reset(true)
   }
 
-  const handleDragStart = (event) => {
+  const handleDragStart = (event, data) => {
+    setDragDirect(true);
     event.dataTransfer.setDragImage(dragImage.current, 0, 0)
+    event.dataTransfer.setData('data', JSON.stringify(data))
     event.target.style.transform = "scale(0.7)"
     event.target.style.opacity = "0.7"
   }
 
-   const dragOver = (event) =>{
+  const dragOver = (event) =>{
+    setDragDirect(false);
     event.target.style.transform = "scale(1)"
     event.target.style.opacity = "1"
     reset(true)
   }
 
+  // const handleSubmit = async (props) => {
+  //   useLoading(true)
+  //   const token = { headers: { Authorization: `Bearer ${jwt}`, webId: webId} }
+  //   try {
+  //     await axios.put(`${mainUrl}/image/updateImage`, props, token);
+  //     setFocus({ _uploaded_back:true })
+  //   } finally {
+  //     useLoading(false)
+  //   }
+  // }
+
+  const FolderDragDrop = (e, data) => {
+    e.preventDefault()
+    const imgData = JSON.parse(e.dataTransfer.getData('data'))
+    //server deer oruulaagui bna paths iig 
+    // handleSubmit({ _id:imgData._id, ...imgData._source, paths: [ ...fetchBody.paths, { path:data.key, order: fetchBody.paths.length + 1 } ] })
+  }
+
+  // console.log(fetchBody)
+
+  const MainEnter = (e) => {
+    e.preventDefault();
+    if(dragDirect){
+      window.open("#section2", "_self")
+    }else{
+      window.open("#section1", "_self")
+    }
+  }
+
+  // const MainDragLeave = (ev) =>{
+  //   if (ev.currentTarget.contains(ev.relatedTarget)) return;
+  //   setDragDirect(false)
+  // }
+
   return (
-    <Container>
+    <Container 
+      onDragEnter={MainEnter} 
+      onDragOver={e => e.preventDefault()} 
+      // onDragLeave={MainDragLeave}
+    >
       {media?.folders?.data?.length > 0 && (
-        <div className="folder-wrap">
+        <div id="section2" className="folder-wrap">
           <h5>Хавтас ({media?.folders?.data?.length})</h5>
           <div className="folders">
             {media?.folders?.data?.map((data, i) => (
               <div 
                 onDragLeave={FolderDragLeave}
                 // onDragOver={()=>reset()}
+                onDrop={e=> FolderDragDrop(e, data)}
+                onDragOver={e => e.preventDefault()}
                 onDragEnter={e=>FolderDragEnter(e, i)}
                 className={`folder_card folder_card${i}`} 
                 key={i}
@@ -124,12 +182,14 @@ const Grid = ({ setFocus, setImage, media, handleFolder, editFolder, fetchBody }
 
       {media?.images?.data?.length > 0 && (
         <div
+          id="section1"
           className={`assets ${dragAsset.active&&`active_asset`}`}
           onDragLeave={onDragLeave}
           onDrop={handleDrop}
+          onDragOver={e =>( e.preventDefault())}
           onDragEnter={onDragEnter}
         >
-          <h5>Зураг ({media.images?.data?.length})</h5>
+          <h5>Зураг ({fetchBody.pagination.total})</h5>
           <div  className="files">
             {media?.images?.data?.map((data, i) => (
               <ImageCard
@@ -139,7 +199,7 @@ const Grid = ({ setFocus, setImage, media, handleFolder, editFolder, fetchBody }
                 handleEdit={handleEdit}
                 dragable={{
                   draggable:true,
-                  onDragStart:handleDragStart,
+                  onDragStart:e=>handleDragStart(e, data),
                   onDragEnd:dragOver
                 }}
               />
@@ -148,7 +208,17 @@ const Grid = ({ setFocus, setImage, media, handleFolder, editFolder, fetchBody }
         </div>
       )}
       
-      <EmptyComponent media={media} setFocus={setFocus} />
+      <EmptyComponent
+          dragProps={{
+            className:`assets ${dragAsset.active&&`active_asset`}`,
+            onDragLeave:onDragLeave,
+            onDrop:handleDrop,
+            onDragOver:e => e.preventDefault(),
+            onDragEnter:onDragEnter
+          }}
+          media={media}
+          setFocus={setFocus}
+      />
     </Container>
   );
 };
@@ -157,6 +227,10 @@ export default Grid;
 
 const Container = styled.div`
   width: 100%;
+  .active_asset{
+    border: 2px solid ${(props) => props.theme.mainColor};
+    border-radius: 8px;
+  }
   .checkbox-wrap {
     display: flex;
     align-items: center;
@@ -270,10 +344,11 @@ const Container = styled.div`
   
 `;
 
-export const EmptyComponent = ({ media, setFocus }) =>{
+export const EmptyComponent = ({ media, setFocus, dragProps }) =>{
+  console.log(dragProps, "props")
   if(media?.images?.data?.length === 0 && media?.images?.data?.length === 0){
     return(
-      <EmptyStyle>
+      <EmptyStyle {...dragProps}>
         <h5>Мэдээлэл алга байна...</h5>
         <SecondaryButton
           onClick={() => setFocus({ type: "upload", data: {} })}

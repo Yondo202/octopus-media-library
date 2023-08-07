@@ -1,8 +1,9 @@
 import axios from 'axios';
 
+export const acceptedImageTypes = ['image/gif', 'image/jpeg', 'image/png', 'image/svg+xml', "image/gif"];
+
 export const InsertImage = (file) => {
     let filEname = file.name?.slice(0, file.name?.lastIndexOf('.'));
-    const acceptedImageTypes = ['image/gif', 'image/jpeg', 'image/png']; //'image/svg+xml' -- server error ogj baigaa
      
     return new Promise((resolve) =>{
         if (!acceptedImageTypes.includes(file.type)) {
