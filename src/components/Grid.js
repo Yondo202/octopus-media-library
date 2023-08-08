@@ -4,7 +4,7 @@ import Svg from "../miscs/svg";
 import { SecondaryButton } from "./MainWrapper";
 import { useLoad } from '../context/MediaCtx';
 import FileImg from "../miscs/img/image.png"
-// import axios from "axios";
+import axios from "axios";
 import ImageCard from "../miscs/ImageCard";
 import { InsertImage, UploadImage, acceptedImageTypes } from '../miscs/UploadFunc';
 // import Pagination from "./Pagination"; // footer baigaa
@@ -109,22 +109,23 @@ const Grid = ({ setFocus, setImage, media, handleFolder, editFolder, fetchBody }
     reset(true)
   }
 
-  // const handleSubmit = async (props) => {
-  //   useLoading(true)
-  //   const token = { headers: { Authorization: `Bearer ${jwt}`, webId: webId} }
-  //   try {
-  //     await axios.put(`${mainUrl}/image/updateImage`, props, token);
-  //     setFocus({ _uploaded_back:true })
-  //   } finally {
-  //     useLoading(false)
-  //   }
-  // }
+  const handleSubmit = async (props) => {
+    useLoading(true)
+    const token = { headers: { Authorization: `Bearer ${jwt}`, webId: webId} }
+    try {
+      await axios.put(`${mainUrl}/image/moveImage`, props, token);
+      setFocus({ _uploaded_back:true })
+    }catch(err){
+      window.alert('Хүсэлт амжилтгүй');
+    }finally {
+      useLoading(false)
+    }
+  }
 
   const FolderDragDrop = (e, data) => {
     e.preventDefault()
     const imgData = JSON.parse(e.dataTransfer.getData('data'))
-    //server deer oruulaagui bna paths iig 
-    // handleSubmit({ _id:imgData._id, ...imgData._source, paths: [ ...fetchBody.paths, { path:data.key, order: fetchBody.paths.length + 1 } ] })
+    handleSubmit({ _id:imgData._id, toPaths: [ ...fetchBody.paths, { path:data.key, order: fetchBody.paths.length + 1 } ] })
   }
 
   // console.log(fetchBody)
@@ -132,7 +133,7 @@ const Grid = ({ setFocus, setImage, media, handleFolder, editFolder, fetchBody }
   const MainEnter = (e) => {
     e.preventDefault();
     if(dragDirect){
-      window.open("#section2", "_self")
+      window.open("#section2", "_self").scrollTo(100, 0)
     }else{
       window.open("#section1", "_self")
     }
@@ -264,6 +265,7 @@ const Container = styled.div`
     }
   }
   .folder-wrap {
+    scroll-top:20px;
     .hr {
       margin: 30px 0;
       background: ${(props) => props.theme.sectionBorderColor};

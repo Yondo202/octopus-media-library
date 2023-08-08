@@ -34,8 +34,6 @@ const MainWrapper = ({ setImage, setFocus, searchData, page, loading, setFetchBo
 
     let props = { setFocus, setImage, media: searchData??{}, handleFolder, editFolder, fetchBody }
 
-    // if(page && globLoading) return <Loading local={true} />
-
     return (
         <Container>
             {page ? <PageHead setFocus={setFocus} /> : <ModalHead setFocus={setFocus} />}
@@ -60,7 +58,8 @@ const MainWrapper = ({ setImage, setFocus, searchData, page, loading, setFetchBo
             <div className={`${!page && `main`}`}>
                 <div className={`${!page && `media-modal`}`}>
                     {/* list heseg martagdsan baina table iin medeellud bolohn edit */}
-                    {(page && globLoading) ? <Loading local={true} /> : loading ? <Loading local={true} /> : grid ? <List {...props} /> : <Grid {...props} />} 
+                    {(page && globLoading) && <Loading withGhost local={true} />}
+                    { loading ? <Loading local={true} /> : grid ? <List {...props} /> : <Grid {...props} />} 
                     { fetchBody.pagination?.total > defaultSize && !searchData?.search && <Pagination fetchBody={fetchBody} setFetchBody={setFetchBody} />}
                 </div>
             </div>
