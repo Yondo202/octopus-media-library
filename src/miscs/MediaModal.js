@@ -24,6 +24,7 @@ const Modal = (props) => {
 }
 
 export default Modal
+
 const animate = keyframes`
     0% { transform:scale(0.8); opacity:0;  }
     100% { transform:scale(1); opacity:1; }
@@ -47,7 +48,8 @@ const Container = styled.div`
         right: 0;
         bottom: 0;
         position: fixed;
-        background: rgba(50, 50, 77, 0.2);
+        // background: rgba(50, 50, 77, 0.2);
+        background-color:${props=>props.theme.maskBackground};
         z-index: 1001;
     }
     .main-content{
@@ -67,7 +69,7 @@ const Container = styled.div`
         .title{
             border-radius: 4px 4px 0px 0px;
             border-bottom: 1px solid ${props => props.theme.sectionBorderColor};
-            background: ${props => props.theme.bodyBackground};
+            background: ${props => props.theme.boxBackground};
             padding: 16px 20px;
             display: flex;
             justify-content: space-between;
@@ -79,7 +81,7 @@ const Container = styled.div`
             }
             .close{
                 border: 1px solid ${props => props.theme.sectionBorderColor};
-                background: ${props => props.theme.boxBackground};
+                background: ${props => props.theme.bodyBackground};
                 padding: 8px;
                 border-radius: 4px;
                 display: flex;
@@ -113,7 +115,7 @@ const Container = styled.div`
         .footer{
             border-radius: 0px 0px 4px 4px;
             border-top: 1px solid ${props => props.theme.sectionBorderColor};
-            background: ${props => props.theme.bodyBackground};
+            background: ${props => props.theme.boxBackground};
             padding: 16px 20px;
             display: flex;
             justify-content: space-between;

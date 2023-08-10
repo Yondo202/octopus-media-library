@@ -381,7 +381,7 @@ export const SecondaryButton = styled.div`
     gap: 10px;
     display: flex;
     border-radius: 4px;
-    background: ${props => props.theme.boxBackground};
+    background: ${props => props.theme.bodyBackground};
     color: ${props => props.theme.textColor};
     font-weight: 700;
     cursor: pointer;

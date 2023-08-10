@@ -6,6 +6,7 @@ export const config = {
     sectionBorderColor: "rgb(234, 234, 239)",
     bodyBackground:"#f6f6f9",
     boxBackground: "#fff",
+    maskBackground: "rgba(0, 0, 0, 0.45)",
 }
 
 export const titles = {
