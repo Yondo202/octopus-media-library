@@ -8,10 +8,12 @@ import { ST, defaultSize } from "../miscs/config";
 import List from "./List";
 import { useLoad } from "../context/MediaCtx";
 import Pagination from "./Pagination";
+import GlobalImage from "./PublicImage";
 
 const MainWrapper = ({ setImage, setFocus, searchData, page, loading, setFetchBody, fetchBody, setSearchData, renderData }) => {
     const { loading:globLoading } = useLoad()
     const [ grid, setGrid ] = useState(false)
+    const [ mainType, setMainType ] = useState('public')
 
     const toggleClass = () => {
         if (grid === true)
@@ -33,12 +35,15 @@ const MainWrapper = ({ setImage, setFocus, searchData, page, loading, setFetchBo
     }
 
     let props = { setFocus, setImage, media: searchData??{}, handleFolder, editFolder, fetchBody }
+    let hrProp = { setFocus, setMainType, mainType }
 
     return (
         <Container>
-            {page ? <PageHead setFocus={setFocus} /> : <ModalHead setFocus={setFocus} />}
+            {page ? <PageHead {...hrProp} /> : <ModalHead {...hrProp} />}
 
-            <div className={`${!page && `body2`}`}>
+            { mainType === 'public' 
+            ? <GlobalImage /> 
+            :<><div className={`${!page && `body2`}`}>
                 <Filter toggleClass={toggleClass} grid={grid} fetchBody={fetchBody} setSearchData={setSearchData} renderData={renderData} />
 
                 {!searchData?.search && <div className="route_head">
@@ -54,19 +59,16 @@ const MainWrapper = ({ setImage, setFocus, searchData, page, loading, setFetchBo
                     })}
                 </div>}
             </div>
-            
             <div className={`${!page && `main`}`}>
                 <div className={`${!page && `media-modal`}`}>
-                    {/* list heseg martagdsan baina table iin medeellud bolohn edit */}
                     {(page && globLoading) && <Loading withGhost local={true} />}
                     { loading ? <Loading local={true} /> : grid ? <List {...props} /> : <Grid {...props} />} 
                     { fetchBody.pagination?.total > defaultSize && !searchData?.search && <Pagination fetchBody={fetchBody} setFetchBody={setFetchBody} />}
                 </div>
-            </div>
+            </div></> }
 
             {!page && <div className="footer">
                 <SecondaryButton onClick={() => setFocus({ _back: true })} >Цуцлах</SecondaryButton>
-                <PrimaryButton>Хадгалах</PrimaryButton>
             </div>}
 
         </Container>
@@ -293,11 +295,16 @@ const Container = styled.div`
     }
     
 `
-
-const PageHead = ({ setFocus }) => {
+// daraa ene 2 iig 1 bolgo
+const PageHead = ({ setFocus, setMainType, mainType }) => {
     return (
         <div className="head_title">
-            <div className="text">Медиа файл</div>
+            {/* <div className="text">Медиа файл</div> */}
+            <TabStyle >
+                <div onClick={()=>setMainType(`public`)} className={`item ${mainType==='public'&&`active_item`}`}>Нээлттэй</div>
+                <div onClick={()=>setMainType(`local`)}  className={`item ${mainType==='local'&&`active_item`}`}>Хувийн</div>
+            </TabStyle>
+            
             <div className="button">
                 <Button onClick={() => setFocus({ type: 'folder' })}><Svg name="add" size="0.7rem" /> Шинэ хавтас үүсгэх</Button>
                 <PrimaryButton onClick={() => setFocus({ type: 'upload' })}><Svg name="add" size="0.7rem" color={"#fff"} /> Шинэ файл нэмэх</PrimaryButton>
@@ -306,12 +313,14 @@ const PageHead = ({ setFocus }) => {
     )
 }
 
-const ModalHead = ({ setFocus }) => {
+const ModalHead = ({ setFocus, setMainType, mainType }) => {
     return (
         <div className="tab-wrap">
             <div className="tablist">
-                <div className={`tab `} >Жагсаалт</div>
-                {/* <div className={`tab `} >Selected ({selected?.length})</div> */}
+                <TabStyle >
+                    <div onClick={()=>setMainType(`public`)} className={`item ${mainType==='public'&&`active_item`}`}>Нээлттэй</div>
+                    <div onClick={()=>setMainType(`local`)}  className={`item ${mainType==='local'&&`active_item`}`}>Хувийн</div>
+                </TabStyle>
             </div>
             <div className="button-wrap">
                 <Button onClick={() => setFocus({ type: 'folder' })}>Шинэ хавтас үүсгэх</Button>
@@ -320,6 +329,40 @@ const ModalHead = ({ setFocus }) => {
         </div>
     )
 }
+const TabStyle = styled.div`
+    displaY:flex;
+    gap:12px;
+    .item{
+        position:relative;
+        // background-color:grey;
+        padding:10px 15px;
+        font-size:14px;
+        font-weight:600;
+        cursor:pointer;
+        color: ${props => props.theme.lightTextColor};
+        // text-transform:uppercase;
+        border-radius:8px;
+        &:hover{
+            background-color:rgba(0,0,0,0.037);
+        }
+        &:before{
+            content:'';
+            position:absolute;
+            bottom:0;
+            left:0;
+            height:2px;
+            width:0%;
+            background-color:${props => props.theme.mainColor};
+            transition:all 0.3s ease;
+        }
+    }
+    .active_item{
+        color: ${props => props.theme.mainColor};
+        &:before{
+            width:100%;
+        }
+    }
+`
 
 const Button = styled.div`
     padding:10px 20px;
