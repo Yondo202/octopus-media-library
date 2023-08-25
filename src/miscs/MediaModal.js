@@ -107,7 +107,7 @@ const Container = styled.div`
             flex-direction: column;
             // max-height: calc(100% - 132px);
             max-height: 100%;
-            max-height: 400px;
+            max-height: 438px;
             width:100%;
             overflow-y: auto;
             scroll-behavior: smooth;

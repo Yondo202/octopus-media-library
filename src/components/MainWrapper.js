@@ -13,7 +13,7 @@ import GlobalImage from "./PublicImage";
 const MainWrapper = ({ setImage, setFocus, searchData, page, loading, setFetchBody, fetchBody, setSearchData, renderData }) => {
     const { loading:globLoading } = useLoad()
     const [ grid, setGrid ] = useState(false)
-    const [ mainType, setMainType ] = useState('public')
+    const [ mainType, setMainType ] = useState(page?`local`:'public')
 
     const toggleClass = () => {
         if (grid === true)
@@ -35,15 +35,21 @@ const MainWrapper = ({ setImage, setFocus, searchData, page, loading, setFetchBo
     }
 
     let props = { setFocus, setImage, media: searchData??{}, handleFolder, editFolder, fetchBody }
-    let hrProp = { setFocus, setMainType, mainType }
+    let hrProp = { setFocus, setMainType, mainType, page }
+
+    // console.log(globLoading)
 
     return (
         <Container>
-            {page ? <PageHead {...hrProp} /> : <ModalHead {...hrProp} />}
-
+            {/* {page ? <PageHead {...hrProp} /> : <ModalHead {...hrProp} />} */}
             { mainType === 'public' 
-            ? <GlobalImage /> 
-            :<><div className={`${!page && `body2`}`}>
+            ? <>
+                <Loading withGhost local={globLoading} />
+                <GlobalImage setImage={setImage} Header={PageHead} headerProps={hrProp} /> 
+            </>
+            :<>
+            <PageHead {...hrProp} />
+            <div className={`${!page && `body2`}`}>
                 <Filter toggleClass={toggleClass} grid={grid} fetchBody={fetchBody} setSearchData={setSearchData} renderData={renderData} />
 
                 {!searchData?.search && <div className="route_head">
@@ -296,39 +302,25 @@ const Container = styled.div`
     
 `
 // daraa ene 2 iig 1 bolgo
-const PageHead = ({ setFocus, setMainType, mainType }) => {
+const PageHead = ({ setFocus, setMainType, mainType, page, Render }) => {
     return (
-        <div className="head_title">
+        <div className={`${page ? `head_title`: `tab-wrap`}`}>
             {/* <div className="text">Медиа файл</div> */}
             <TabStyle >
                 <div onClick={()=>setMainType(`public`)} className={`item ${mainType==='public'&&`active_item`}`}>Нээлттэй</div>
                 <div onClick={()=>setMainType(`local`)}  className={`item ${mainType==='local'&&`active_item`}`}>Хувийн</div>
             </TabStyle>
-            
-            <div className="button">
+            {Render
+            ?<Render />
+            :<div className={`${page ? `button`: `button-wrap`}`}>
                 <Button onClick={() => setFocus({ type: 'folder' })}><Svg name="add" size="0.7rem" /> Шинэ хавтас үүсгэх</Button>
                 <PrimaryButton onClick={() => setFocus({ type: 'upload' })}><Svg name="add" size="0.7rem" color={"#fff"} /> Шинэ файл нэмэх</PrimaryButton>
-            </div>
+            </div>}
+            
         </div>
     )
 }
 
-const ModalHead = ({ setFocus, setMainType, mainType }) => {
-    return (
-        <div className="tab-wrap">
-            <div className="tablist">
-                <TabStyle >
-                    <div onClick={()=>setMainType(`public`)} className={`item ${mainType==='public'&&`active_item`}`}>Нээлттэй</div>
-                    <div onClick={()=>setMainType(`local`)}  className={`item ${mainType==='local'&&`active_item`}`}>Хувийн</div>
-                </TabStyle>
-            </div>
-            <div className="button-wrap">
-                <Button onClick={() => setFocus({ type: 'folder' })}>Шинэ хавтас үүсгэх</Button>
-                <PrimaryButton onClick={() => setFocus({ type: 'upload' })}>Шинэ файл нэмэх</PrimaryButton>
-            </div>
-        </div>
-    )
-}
 const TabStyle = styled.div`
     displaY:flex;
     gap:12px;
