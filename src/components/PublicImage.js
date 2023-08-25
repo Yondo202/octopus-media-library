@@ -1,13 +1,9 @@
 import React, { useEffect, useState, useRef } from "react";
 import styled, { keyframes } from "styled-components";
 import axios from "axios";
-import Image from "../miscs/img/image_holder.svg"
-import Search from "../miscs/img/search.svg"
-import Video from "../miscs/img/video1.svg"
 import { useLoad } from "../context/MediaCtx";
 import MediaPlayer from "./MediaPlayer";
-
-// let array = [1, 2, 3, 4];
+import Svg from '../miscs/svg';
 
 const toColumns = (photos, columns) => {
   photos = photos?.reverse()
@@ -24,7 +20,7 @@ const PublicImage = ({ Header, headerProps, setImage }) => {
   const { useLoading } = useLoad()
   const [ photos, setPhotos ] = useState({});
   const [ videos, setVideos ] = useState({});
-  const [ searchVal, setSearchVal ] = useState({ type:'image', input:''})
+  const [ searchVal, setSearchVal ] = useState({ type:'image', input:null})
 
   const fetch = async (props) => {
     useLoading(true)
@@ -75,27 +71,37 @@ const PublicImage = ({ Header, headerProps, setImage }) => {
 
   // <video ref="vidRef" src="some.mp4" type="video/mp4"></video>
 
+  const SVG = ({name}) => <Svg name={name} color="#666687" size="1.3rem" />
+
   const PublicHeader = () => {
     const input = useRef()
     useEffect(() => {
-      input.current?.focus()
-    }, [])
+      if(searchVal.input !== null){
+        input.current?.focus()
+      }
+    }, [searchVal.input])
+
     return(
       <PublicHeadStyle>
           <div className="handle_header">
             <div className="type_select">
-              <img src={searchVal.type === "video"?Video:Image} alt="img" className="svg1" />
+              {searchVal.type === "video" ? <SVG name="image_holder" /> : <SVG name="video" />}
               <span className="type_text">{searchVal.type === "video"?`Видео`:`Зураг`}</span>
               <div className="select_par">
-                <div onClick={() =>setSearchVal(prev=>({ ...prev, type:'image' }))} className="items"><img src={Image} alt="img" className="svg1" /> <span>Зураг</span></div>
-                <div onClick={() =>setSearchVal(prev=>({ ...prev, type:'video' }))}  className="items"><img src={Video} alt="img" className="svg1" /> <span>Видео</span></div>
+                <div onClick={() =>setSearchVal(prev=>({ ...prev, type:'image' }))} className="items">
+                  <SVG name="image_holder" /> <span>Зураг</span>
+                </div>
+                <div onClick={() =>setSearchVal(prev=>({ ...prev, type:'video' }))}  className="items">
+                  <SVG name="video" /> <span>Видео</span>
+                </div>
               </div>
-              {/* <span>sv</span> */}
-              {/* <img src={Image} alt="img" className="svg1" />  */}
             </div>
+
             <form onSubmit={searchHandle} className="search">
-              <input ref={input} value={searchVal.input} onChange={onChangeHandle} required type="search" placeholder="Зураг хайх..." />
-              <button className="search_svg"><img src={Search} alt="img"/></button>
+              <input ref={input} value={searchVal.input??''} onChange={onChangeHandle} required type="search" placeholder="Зураг хайх..." />
+              <button className="search_svg">
+                <Svg name="search" color="#666687" size="1rem" /> 
+              </button>
             </form>
           </div>
         </PublicHeadStyle>
@@ -199,9 +205,6 @@ const PublicHeadStyle = styled.div`
           }
         }
       }
-      .svg1{
-        width:20px;
-      }
       &:hover{
         border:1px solid ${props=>props.theme.sectionBorderColor};
         .type_text{
@@ -233,9 +236,6 @@ const PublicHeadStyle = styled.div`
         justify-content:center;
         padding:0px 10px;
         border-left:1px solid ${props=>props.theme.sectionBorderColor};
-        img{
-          width:22px;
-        }
       }
     }
   }
