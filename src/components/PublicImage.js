@@ -50,7 +50,7 @@ const PublicImage = ({ Header, headerProps, setImage }) => {
   // "https://api.pexels.com/v1/search/?page=2&per_page=16&query=human"
 
   useEffect(() => {
-    if(searchVal.input === ''){
+    if(searchVal.input === '' || searchVal.input === null){
       fetch({ type:searchVal.type, input:'mongolia' });
     }else{
       fetch(searchVal);
@@ -64,7 +64,7 @@ const PublicImage = ({ Header, headerProps, setImage }) => {
 
   const onChangeHandle = (e) =>{
     setSearchVal(prev=>({ ...prev, input:e.target.value }))
-    if(e.target.value === ''){
+    if(e.target.value === '' || searchVal.input === null){
       fetch({ type:searchVal.type, input:'mongolia' })
     }
   }
