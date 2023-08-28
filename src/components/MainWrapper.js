@@ -13,7 +13,8 @@ import GlobalImage from "./PublicImage";
 const MainWrapper = ({ setImage, setFocus, searchData, page, loading, setFetchBody, fetchBody, setSearchData, renderData }) => {
     const { loading:globLoading } = useLoad()
     const [ grid, setGrid ] = useState(false)
-    const [ mainType, setMainType ] = useState(page?`local`:'public')
+    // const [ mainType, setMainType ] = useState(page?`local`:'public')
+    const [ mainType, setMainType ] = useState('public')
 
     const toggleClass = () => {
         if (grid === true)
@@ -45,7 +46,7 @@ const MainWrapper = ({ setImage, setFocus, searchData, page, loading, setFetchBo
             { mainType === 'public' 
             ? <>
                 <Loading withGhost local={globLoading} />
-                <GlobalImage setImage={setImage} Header={PageHead} headerProps={hrProp} /> 
+                <GlobalImage setImage={setImage} Header={PageHead} headerProps={hrProp} page={page} /> 
             </>
             :<>
             <PageHead {...hrProp} />
@@ -64,6 +65,7 @@ const MainWrapper = ({ setImage, setFocus, searchData, page, loading, setFetchBo
                         )
                     })}
                 </div>}
+
             </div>
             <div className={`${!page && `main`}`}>
                 <div className={`${!page && `media-modal`}`}>

@@ -14,12 +14,9 @@ const svgs = {
     search: (color, size) => <SvgStyled color={color} xmlns="http://www.w3.org/2000/svg" width={size ?? "1rem"} height={size ?? "1rem"} fill="none" viewBox="0 0 24 24" aria-hidden="true"><path d="m23.813 20.163-5.3-5.367a9.792 9.792 0 0 0 1.312-4.867C19.825 4.455 15.375 0 9.913 0 4.45 0 0 4.455 0 9.929c0 5.473 4.45 9.928 9.912 9.928a9.757 9.757 0 0 0 5.007-1.4l5.275 5.35a.634.634 0 0 0 .913 0l2.706-2.737a.641.641 0 0 0 0-.907ZM9.91 3.867c3.338 0 6.05 2.718 6.05 6.061s-2.712 6.061-6.05 6.061c-3.337 0-6.05-2.718-6.05-6.06 0-3.344 2.713-6.062 6.05-6.062Z"></path></SvgStyled>,
     list: (color, size) => <SvgStyled color={color} xmlns="http://www.w3.org/2000/svg" width={size ?? "1rem"} height={size ?? "1rem"} fill="none" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="m2.4.1.1-.1h9.4l.1.1v2.2l-.1.1H2.5l-.1-.1V.1ZM0 4.9l.1-.1h9.4l.1.1v2.2l-.1.1H.1L0 7.1V4.9Zm2.5 4.7-.1.1v2.2l.1.1h9.4l.1-.1V9.7l-.1-.1H2.5Z"></path></SvgStyled>,
     downarrow:(color, size, className) => <SvgStyled className={className} color={color} xmlns="http://www.w3.org/2000/svg" width={size ?? "1rem"} height={size ?? "1rem"} fill="none" viewBox="0 0 14 8"><path className={className} fill="#32324D" fillRule="evenodd" d="M14 .889a.86.86 0 0 1-.26.625L7.615 7.736A.834.834 0 0 1 7 8a.834.834 0 0 1-.615-.264L.26 1.514A.861.861 0 0 1 0 .889c0-.24.087-.45.26-.625A.834.834 0 0 1 .875 0h12.25c.237 0 .442.088.615.264a.86.86 0 0 1 .26.625Z" clipRule="evenodd"></path></SvgStyled>,
-
-
     image_holder:(color, size, className) => <SvgStyled className={className} color={color} xmlns="http://www.w3.org/2000/svg" width={size ?? "1rem"} height={size ?? "1rem"} viewBox="0 -960 960 960"><path d="M146.666-144q-33.724 0-58.862-25.138Q62.667-194.275 62.667-228v-504q0-33.725 25.137-58.862Q112.942-816 146.666-816h666.668q33.724 0 58.862 25.138 25.137 25.137 25.137 58.862v504q0 33.725-25.137 58.862Q847.058-144 813.334-144H146.666Zm0-84h666.668v-504H146.666v504ZM226-317.333h508.667L576-531.333l-128.667 172-92.666-127.333L226-317.333ZM146.666-228v-504 504Z"/></SvgStyled>,
     video:(color, size, className) => <SvgStyled xmlns="http://www.w3.org/2000/svg" className={className} color={color}  width={size ?? "1rem"} height={size ?? "1rem"} viewBox="0 -960 960 960"><path d="m374-290 294-190-294-190v380ZM186.666-102.667q-33.724 0-58.862-25.137-25.137-25.138-25.137-58.862v-586.668q0-33.724 25.137-58.862 25.138-25.137 58.862-25.137h586.668q33.724 0 58.862 25.137 25.137 25.138 25.137 58.862v586.668q0 33.724-25.137 58.862-25.138 25.137-58.862 25.137H186.666Zm0-83.999h586.668v-586.668H186.666v586.668Zm0-586.668v586.668-586.668Z"/></SvgStyled>,
-
-    // search:(color, size, className) => <SvgStyled className={className} color={color} xmlns="http://www.w3.org/2000/svg"  width={size ?? "1rem"} height={size ?? "1rem"}  viewBox="0 -960 960 960"><path d="M146.666-144q-33.724 0-58.862-25.138Q62.667-194.275 62.667-228v-504q0-33.725 25.137-58.862Q112.942-816 146.666-816h666.668q33.724 0 58.862 25.138 25.137 25.137 25.137 58.862v504q0 33.725-25.137 58.862Q847.058-144 813.334-144H146.666Zm0-84h666.668v-504H146.666v504ZM226-317.333h508.667L576-531.333l-128.667 172-92.666-127.333L226-317.333ZM146.666-228v-504 504Z"/></SvgStyled>,
+    download:(color, size, className) => <SvgStyled xmlns="http://www.w3.org/2000/svg" className={className} color={color}  width={size ?? "1rem"} height={size ?? "1rem"} viewBox="0 -960 960 960" ><path d="M480-320 280-520l56-58 104 104v-326h80v326l104-104 56 58-200 200ZM240-160q-33 0-56.5-23.5T160-240v-120h80v120h480v-120h80v120q0 33-23.5 56.5T720-160H240Z"/></SvgStyled>,
 }
 
 const svg = ({ name, color, size, className }) => {
@@ -27,7 +24,6 @@ const svg = ({ name, color, size, className }) => {
         svgs[name](color, size, className)
     )
 }
-
 
 export default svg
 

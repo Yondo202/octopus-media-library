@@ -69,7 +69,6 @@ const MediaIndex = ({ page, setImage, onCancel, open, webId = getWebId(), access
             setRenderData(res.data.data)
             setFetchBody((prev) => ({ ...prev, pagination: res.data.data.images?.pagination }));
          }
-         
       } catch (err) {
          console.log(err, 'err');
       } finally {

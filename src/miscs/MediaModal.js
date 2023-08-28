@@ -65,7 +65,7 @@ const Container = styled.div`
         display: flex;
         flex-direction: column;
         justify-content: space-between;
-        z-index: 1002;
+        z-index: 10000;
         .title{
             border-radius: 4px 4px 0px 0px;
             border-bottom: 1px solid ${props => props.theme.sectionBorderColor};

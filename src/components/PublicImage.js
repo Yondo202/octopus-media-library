@@ -16,7 +16,7 @@ const toColumns = (photos, columns) => {
   return response
 }
 
-const PublicImage = ({ Header, headerProps, setImage }) => {
+const PublicImage = ({ Header, headerProps, setImage, page }) => {
   const { useLoading } = useLoad()
   const [ photos, setPhotos ] = useState({});
   const [ videos, setVideos ] = useState({});
@@ -107,17 +107,7 @@ const PublicImage = ({ Header, headerProps, setImage }) => {
         </PublicHeadStyle>
     )
   }
-//  {
-//     "_id": "fd9sHIoB6TX1DoBeb0SI",
-//     "title": "355801879_1685873581857483_3174708178206824637_n",
-//     "alt": "355801879_1685873581857483_3174708178206824637_n",
-//     "webId": "ed3cc972-e978-44b7-aeab-5b25d5fd7124",
-//     "name": "f468e14e-1582-4c24-b571-54275402e902",
-//     "ext": "jpeg",
-//     "url": "https://d3sz3sn6rfkupg.cloudfront.net/ed3cc972-e978-44b7-aeab-5b25d5fd7124/f468e14e-1582-4c24-b571-54275402e902.jpeg",
-//     "createdAt": "2023-08-22 08:46:23+00:00",
-//     "createdBy": "6e7dd0a8-172c-4bc4-8af9-68e65598d2e9"
-//  }
+
   const selectImageHandle = (item) =>{
     setImage?.({ alt:item.alt, title:item.alt, name:item.alt, url: item?.src.large ?? item?.src.medium,  })
   }
@@ -144,7 +134,12 @@ const PublicImage = ({ Header, headerProps, setImage }) => {
                   {item.map((el, ind) => {
                     return (
                       <div onClick={()=>selectImageHandle(el)} key={ind} className="image_box">
-                        <img className="img" src={el?.src?.large} alt={el.photographer} />
+                        <img loading="lazy" className="img" src={page ? el?.src?.large : el?.src?.medium} alt={el.photographer} />
+                        <div className="ghost_div">
+                          <div className="download_img">
+                            <Svg color="#000" name="download" />
+                          </div>
+                        </div>
                       </div>
                     );
                   })}
@@ -261,6 +256,28 @@ const Container = styled.div`
         .image_box{
           cursor:pointer;
           animation:${animate} 0.15s ease;
+          position:relative;
+          .ghost_div{
+            position:absolute;
+            left:0;
+            top:0;
+            width:100%;
+            height:99%;
+            z-index:2;
+            display:flex;
+            align-items:flex-end;
+            justify-content:flex-end;
+            border-radius:8px;
+            .download_img{
+              background-color:#fff;
+              display:flex;
+              padding:10px;
+              border-radius:4px;
+              margin-bottom:10px;
+              margin-right:10px;
+              display:none;
+            }
+          }
           .img{
             width:100%;
             border-radius:10px;
@@ -268,8 +285,14 @@ const Container = styled.div`
             transform:scale(1)
           }
           &:hover{
+            .ghost_div{
+              background-color:rgba(0,0,0,0.2);
+              .download_img{
+                display:block;
+              }
+            }
             .img{
-              transform:scale(1.15)
+              // transform:scale(1.1)
             }
           }
         }
