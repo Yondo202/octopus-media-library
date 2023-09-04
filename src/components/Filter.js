@@ -17,6 +17,7 @@ const Filter = ({ grid, toggleClass, setSearchData, renderData }) => {
 
    const handleSubmit = async (e) => {
       e.preventDefault();
+      e.stopPropagation();
       useLoading(true);
       const token = { headers: { Authorization: `Bearer ${jwt}`, webId: webId } };
       try {

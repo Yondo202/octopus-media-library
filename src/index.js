@@ -30,7 +30,8 @@ const getJwt = () =>{
 
 // theme_asset - localstorage {}
 const mainUrl = "https://content-service.siro.mn"
-// const testToken = `eyJraWQiOiJsU2RNcWtQbHFzc0dOVzJUejJkeDMrWjVGejR6U2UrUkFBNFwvanZKRWFcL009IiwiYWxnIjoiUlMyNTYifQ.eyJzdWIiOiIwMWJiYmIxMS02ZTM4LTQ0ZWItOTg2OS04NmE3ZTcyODYyODIiLCJpc3MiOiJodHRwczpcL1wvY29nbml0by1pZHAuYXAtc291dGhlYXN0LTEuYW1hem9uYXdzLmNvbVwvYXAtc291dGhlYXN0LTFfbDZEUDZaYnV2IiwiY2xpZW50X2lkIjoiMmtiN3VrdnY2Ymk4YnBtZW9nNHYxdjQ4dWYiLCJvcmlnaW5fanRpIjoiZWU1MjkwMGYtYmFjNS00NGJjLWJjZjYtMDY2YzQ1NWU4NzM3IiwiZXZlbnRfaWQiOiIwODhiYzgwMC04MGI3LTQxM2UtYmM4ZS03ODg2MWNjZGM1MjkiLCJ0b2tlbl91c2UiOiJhY2Nlc3MiLCJzY29wZSI6ImF3cy5jb2duaXRvLnNpZ25pbi51c2VyLmFkbWluIiwiYXV0aF90aW1lIjoxNjkxMzc1MzAzLCJleHAiOjE2OTE0NjE3MDMsImlhdCI6MTY5MTM3NTMwMywianRpIjoiYWY1MDNjYzUtZTE3My00MGFhLWFmMTctMWIyZjhmMGM5ZTI4IiwidXNlcm5hbWUiOiI5OTgwMTQwNiJ9.dsE6lkjx2ZXaGGUMbKKhmchYGWUx5ZEtsmyz75EHnA7cUiGpWXlVU8rW-hxtf8CtBOIxNC6v1256iO5wIt-L_5Wc3UVdPeXUOE276_g0LRQliMNEuuTYY-7An1_UtBS252fk592P6I-nswdB_zO1MMxHikY3f0_ODeSzK1CCS9bh2uSF4Lt-LIg3ncjMLq0IDhJ9NhzPczFDTARemFlwquL0Ev9vKZa-W7Xj4jC1RHdIAoBPAKEoQvD_h6da-lxQAIIYone8NCIuDlcFUV_MmjVuq80hcWvF0EcXTwEHiPAdr2Gr5Z0bkC7AHwGcEyaM6_3xfNLkvYyWeYg8050kow`
+// const mainUrl = "http://192.168.230.160:3003"
+// const testToken = `eyJraWQiOiJsU2RNcWtQbHFzc0dOVzJUejJkeDMrWjVGejR6U2UrUkFBNFwvanZKRWFcL009IiwiYWxnIjoiUlMyNTYifQ.eyJzdWIiOiJjM2VkMTBiYi1kNTc1LTQ5ZTItODUyMi1kMDcwYzdlOGRiZmEiLCJpc3MiOiJodHRwczpcL1wvY29nbml0by1pZHAuYXAtc291dGhlYXN0LTEuYW1hem9uYXdzLmNvbVwvYXAtc291dGhlYXN0LTFfbDZEUDZaYnV2IiwiY2xpZW50X2lkIjoiMmtiN3VrdnY2Ymk4YnBtZW9nNHYxdjQ4dWYiLCJvcmlnaW5fanRpIjoiNTQyNDE5ZjMtNTIxZC00NWU3LTlhNjMtNTMzMTFmMjcwY2Y0IiwiZXZlbnRfaWQiOiJlZmY4MThjNS02ZWQ1LTRlMmMtOGIxYS03NGRkZWNkY2RjMTAiLCJ0b2tlbl91c2UiOiJhY2Nlc3MiLCJzY29wZSI6ImF3cy5jb2duaXRvLnNpZ25pbi51c2VyLmFkbWluIiwiYXV0aF90aW1lIjoxNjkzNzkwOTczLCJleHAiOjE2OTM4NzczNzMsImlhdCI6MTY5Mzc5MDk3MywianRpIjoiYjA4ZDMwZjYtOTMxZS00OGU4LThmNTQtZTFiMWFjYTE3MWVkIiwidXNlcm5hbWUiOiI5MDgwMDE1MCJ9.b0zGagfgvXxwkUDXhHWSRXAqpC41V1_khbChpSJAZUonVO_L1bfunI82SmaaUc7Tm7LAXFjbPdm3BzLQbXS4s5tL1XskKzOpStFWNpIkev8REawfKjAe0Nal0yQw4-vNJfD-9CeJkR87qKYBRBvQHbYudwr49PxvFGt-2d6KjoqJ9r6tT8JTDhOwa57B43zRgw133BFVjybB3kxpNttDxnUixFJTIE3tKrUesnot7rqAXM3CqLh9gornczsYbpSf6Scf9zuX2WTVWbS4zuQEHYOFKGpi2CyY2cSmXrxOw7vRb3hqZfcPKrs8Cv38Yg-Hc2rFeCQh88VvgttmuPAFMg`
 // const testWebid = `c795bdf9-8f8d-4fe0-b6c1-662a5ce2b840`
 
 const MediaIndex = ({ page, setImage, onCancel, open, webId = getWebId(), accessToken = getJwt() }) => {
@@ -114,6 +115,8 @@ const MediaIndex = ({ page, setImage, onCancel, open, webId = getWebId(), access
    const ctxProps = { mainUrl:mainUrl, webId:webId , jwt:accessToken }
 
    const themes = useMemo(() => JSON.parse(localStorage.getItem('theme_asset')),[])
+
+
 
    return (
       <ThemeProvider theme={{ ...config, ...themes }}>

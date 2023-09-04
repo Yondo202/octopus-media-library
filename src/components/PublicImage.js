@@ -59,6 +59,7 @@ const PublicImage = ({ Header, headerProps, setImage, page }) => {
 
   const searchHandle = (e) => {
     e.preventDefault()
+    e.stopPropagation()
     fetch(searchVal)
   }
 
@@ -99,9 +100,9 @@ const PublicImage = ({ Header, headerProps, setImage, page }) => {
 
             <form onSubmit={searchHandle} className="search">
               <input ref={input} value={searchVal.input??''} onChange={onChangeHandle} required type="search" placeholder="Зураг хайх..." />
-              <button className="search_svg">
+              <div className="search_svg">
                 <Svg name="search" color="#666687" size="1rem" /> 
-              </button>
+              </div>
             </form>
           </div>
         </PublicHeadStyle>
