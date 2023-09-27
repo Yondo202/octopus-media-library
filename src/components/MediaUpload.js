@@ -6,6 +6,7 @@ import Svg from '../miscs/svg';
 import { useLoad } from '../context/MediaCtx';
 import RouteHead from '../miscs/RouteHead';
 import { InsertImage, UploadImage } from '../miscs/UploadFunc';
+import { allTypes } from "../miscs/UploadFunc"
 
 export const UploadFinal = ({ setFocus, focus, page, setImage, fetchBody }) => {
    const [success, setSuccess] = useState({ data: null, success: false });
@@ -39,7 +40,7 @@ export const UploadFinal = ({ setFocus, focus, page, setImage, fetchBody }) => {
          <div className="footer">
             <SecondaryButton onClick={() => setFocus({ _back: true })}>Цуцлах</SecondaryButton>
             {success.success ? (
-               <PrimaryButton onClick={() => setImage({ _id: success.data._id, ...success.data._source })}>Дуусгах</PrimaryButton>
+               <PrimaryButton onClick={() => success?.data?._source?.type === "file" ? setFocus({ _uploaded_back: true }) : setImage({ _id: success.data._id, ...success.data._source })}>Дуусгах</PrimaryButton>
             ) : (
                <PrimaryButton onClick={() => handleSubmit()}>Хавсаргах</PrimaryButton>
             )}
@@ -57,7 +58,6 @@ const MediaUpload = ({ setFocus }) => {
       setDragAsset(false)
       // data = JSON.parse(event.dataTransfer.getData('text'));
       const { files } = event.dataTransfer;
-      console.log(files, "heey")
       if (files.length > 0) {
          selectImage(files[0])
          // if(files.length === 1){
@@ -79,7 +79,7 @@ const MediaUpload = ({ setFocus }) => {
 
    const selectImage = async (file) => {
       const { data } = await InsertImage(file)
-      setFocus({ type: 'finalupload', data: data });
+      setFocus({ type: 'finalupload', data: { ...data, type: data.type.slice(0, 5) === "image" ? data.type : 'file' } });
    };
 
    const onDragLeave = (event) => {
@@ -99,7 +99,8 @@ const MediaUpload = ({ setFocus }) => {
                   <input
                      type="file"
                      name="filename"
-                     accept="image/*"
+                     // accept="image/*, doc/*"
+                     accept={allTypes.join(', ')}
                      id="file-input"
                      key={Math.random()}
                      className="file-input__input"

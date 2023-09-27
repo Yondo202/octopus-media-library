@@ -54,7 +54,7 @@ const Container = styled.div`
     }
     .main-content{
         position: absolute;
-        top: 45%;
+        top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
         background: ${props => props.theme.boxBackground};
@@ -105,9 +105,7 @@ const Container = styled.div`
             position:relative;
             display: flex;
             flex-direction: column;
-            // max-height: calc(100% - 132px);
-            max-height: 100%;
-            max-height: 438px;
+            max-height: 62dvh;
             width:100%;
             overflow-y: auto;
             scroll-behavior: smooth;

@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
+import { fileTypes } from '../miscs/enums';
+import { Button } from './MainWrapper';
 import { useLoad } from '../context/MediaCtx';
 import Svg from '../miscs/svg';
 
-const Filter = ({ grid, toggleClass, setSearchData, renderData }) => {
+// grid, toggleClass,
+const Filter = ({  setSearchData, renderData, fetchBody, setFetchBody }) => {
    const [search, setSearch] = useState('');
    const { useLoading, webId, jwt, mainUrl } = useLoad();
 
@@ -30,6 +33,10 @@ const Filter = ({ grid, toggleClass, setSearchData, renderData }) => {
       }
    };
 
+   const filterAction = (value) =>{
+      setFetchBody(prev=>({ ...prev, type:value }))
+   }
+
    return (
       <Container>
          <div className="wrap">
@@ -39,16 +46,16 @@ const Filter = ({ grid, toggleClass, setSearchData, renderData }) => {
             </form>
          </div>
          <div className="wrap">
-            <div className="box" onClick={toggleClass}>
+            <Button onClick={() =>filterAction('')} className={!fetchBody.type? ``: `filter_btn`}>Бүгд</Button>
+            <Button onClick={() =>filterAction(fileTypes.image)} className={fetchBody.type === fileTypes.image ? ``: `filter_btn`}><Svg name="image_holder" color={fetchBody.type=== fileTypes.image?null:"rgb(142, 142, 169)"}  size="1rem" />Зураг</Button>
+            <Button onClick={() =>filterAction(fileTypes.file)} className={fetchBody.type === fileTypes.file? ``: `filter_btn`}><Svg name="doc" color={fetchBody.type=== fileTypes.file?null:"rgb(142, 142, 169)"} size="0.66rem" /> Файл</Button>
+            {/* <div className="box" onClick={toggleClass}>
                {grid == true ? (
                   <Svg name="grid" color="rgb(142, 142, 169)" size="1rem" />
                ) : (
                   <Svg name="list" color="rgb(142, 142, 169)" size="1rem" />
                )}
-            </div>
-            {/* <div className="box">
-                    <Svg name="setting" color="rgb(142, 142, 169)" size="16px" />
-                </div> */}
+            </div> */}
          </div>
       </Container>
    );
@@ -66,6 +73,12 @@ const Container = styled.div`
       align-items: center;
       gap: 10px;
       width: fit-content;
+      .filter_btn{
+         background: ${(props) => props.theme.boxBackground};
+         border: 1px solid ${(props) => props.theme.sectionBorderColor};
+         color:${props=>props.theme.lightTextColor};
+      }
+      
       .box {
          background: ${(props) => props.theme.boxBackground};
          padding: 8px;

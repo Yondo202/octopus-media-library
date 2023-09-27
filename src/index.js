@@ -5,6 +5,7 @@ import { config, titles, defaultSize } from './miscs/config';
 import FileDetail from './components/FileDetail';
 import Move from './components/Move';
 import Loading from './miscs/Loading';
+// import { fileTypes } from "./miscs/enums"
 import MediaModal from './miscs/MediaModal';
 import MainWrapper from './components/MainWrapper';
 import Error from './miscs/Error';
@@ -20,27 +21,26 @@ const initial = { type: `main`, title: '', data: {}, chain: [{ type: 'main' }] }
 // const mainUrl = "https://content-service.siro.mn"
 // const mainUrl = 'http://192.168.230.160:3003';
 
-const getWebId = () =>{
+const getWebId = () => {
    return document.cookie?.split('; ')?.find(row => row.startsWith('webid='))?.split('=')[1]
 }
 
-const getJwt = () =>{
+const getJwt = () => {
    return document.cookie?.split('; ')?.find(row => row.startsWith('jwt='))?.split('=')[1]
 }
 
 // theme_asset - localstorage {}
 const mainUrl = "https://content-service.siro.mn"
 // const mainUrl = "http://192.168.230.160:3003"
-// const testToken = `eyJraWQiOiJsU2RNcWtQbHFzc0dOVzJUejJkeDMrWjVGejR6U2UrUkFBNFwvanZKRWFcL009IiwiYWxnIjoiUlMyNTYifQ.eyJzdWIiOiJjM2VkMTBiYi1kNTc1LTQ5ZTItODUyMi1kMDcwYzdlOGRiZmEiLCJpc3MiOiJodHRwczpcL1wvY29nbml0by1pZHAuYXAtc291dGhlYXN0LTEuYW1hem9uYXdzLmNvbVwvYXAtc291dGhlYXN0LTFfbDZEUDZaYnV2IiwiY2xpZW50X2lkIjoiMmtiN3VrdnY2Ymk4YnBtZW9nNHYxdjQ4dWYiLCJvcmlnaW5fanRpIjoiNTQyNDE5ZjMtNTIxZC00NWU3LTlhNjMtNTMzMTFmMjcwY2Y0IiwiZXZlbnRfaWQiOiJlZmY4MThjNS02ZWQ1LTRlMmMtOGIxYS03NGRkZWNkY2RjMTAiLCJ0b2tlbl91c2UiOiJhY2Nlc3MiLCJzY29wZSI6ImF3cy5jb2duaXRvLnNpZ25pbi51c2VyLmFkbWluIiwiYXV0aF90aW1lIjoxNjkzNzkwOTczLCJleHAiOjE2OTM4NzczNzMsImlhdCI6MTY5Mzc5MDk3MywianRpIjoiYjA4ZDMwZjYtOTMxZS00OGU4LThmNTQtZTFiMWFjYTE3MWVkIiwidXNlcm5hbWUiOiI5MDgwMDE1MCJ9.b0zGagfgvXxwkUDXhHWSRXAqpC41V1_khbChpSJAZUonVO_L1bfunI82SmaaUc7Tm7LAXFjbPdm3BzLQbXS4s5tL1XskKzOpStFWNpIkev8REawfKjAe0Nal0yQw4-vNJfD-9CeJkR87qKYBRBvQHbYudwr49PxvFGt-2d6KjoqJ9r6tT8JTDhOwa57B43zRgw133BFVjybB3kxpNttDxnUixFJTIE3tKrUesnot7rqAXM3CqLh9gornczsYbpSf6Scf9zuX2WTVWbS4zuQEHYOFKGpi2CyY2cSmXrxOw7vRb3hqZfcPKrs8Cv38Yg-Hc2rFeCQh88VvgttmuPAFMg`
-// const testWebid = `c795bdf9-8f8d-4fe0-b6c1-662a5ce2b840`
+// const testToken = `eyJraWQiOiJsU2RNcWtQbHFzc0dOVzJUejJkeDMrWjVGejR6U2UrUkFBNFwvanZKRWFcL009IiwiYWxnIjoiUlMyNTYifQ.eyJzdWIiOiJjM2VkMTBiYi1kNTc1LTQ5ZTItODUyMi1kMDcwYzdlOGRiZmEiLCJpc3MiOiJodHRwczpcL1wvY29nbml0by1pZHAuYXAtc291dGhlYXN0LTEuYW1hem9uYXdzLmNvbVwvYXAtc291dGhlYXN0LTFfbDZEUDZaYnV2IiwiY2xpZW50X2lkIjoiMmtiN3VrdnY2Ymk4YnBtZW9nNHYxdjQ4dWYiLCJvcmlnaW5fanRpIjoiNDJmNjRmZTgtMzQ4NS00ODQ2LTlmNDItNGQ2MWUzNzdmNjkzIiwiZXZlbnRfaWQiOiIwMGYwNWM3Mi1mODQ1LTQ5YTQtOWQ3MC0wYzc0MjIyNjEzZTkiLCJ0b2tlbl91c2UiOiJhY2Nlc3MiLCJzY29wZSI6ImF3cy5jb2duaXRvLnNpZ25pbi51c2VyLmFkbWluIiwiYXV0aF90aW1lIjoxNjk1Nzc2MDEzLCJleHAiOjE2OTU4NjI0MTMsImlhdCI6MTY5NTc3NjAxMywianRpIjoiZDQxMzhlNDItNDgxNC00ZGYwLTlkODEtNDJiOTQ1NjBjMjZhIiwidXNlcm5hbWUiOiI5MDgwMDE1MCJ9.WwRS8ixfPbvZMSixCT7XyUrCAGno3NGVNMtV7kWt9qC-2eW0sD2-EYKTsNP_yA-NheoUWie2IKDsJHfN_5Etyz9L6nrp34bo-zZ4Gq4uWPTMQoDSMEMEyvv3XhY_0CZxoQDyd4Vap71_OW8N8uaQhU269sSLvMs98vXR330Fkznvcn2UL7qXMwvgtlHllqaAbc9VJgPrxOd-LWQ_Nyc9AG_N7AaDuPR6buUFer9qkQI80T9GH1LUmkVgQa6Hu2kWRoCV9TkO1nuWJtAMIUg9oi618juIPPTarw6PTsnP4r0EFRwy3VFTRI-DfJGKU2OuXYHQwsRllhvA7QXBGXOOWg`
+// const testWebid = `ed3cc972-e978-44b7-aeab-5b25d5fd7124`
 
 const MediaIndex = ({ page, setImage, onCancel, open, webId = getWebId(), accessToken = getJwt() }) => {
-   const [loading, setLoading] = useState(false); // use global load
-   const [focus, setFocusState ] = useState(initial);
+   const [ loading, setLoading ] = useState(false); // use global load
+   const [ focus, setFocusState ] = useState(initial);
    const [ searchData, setSearchData] = useState({});
    const [ renderData, setRenderData ] = useState({})
-   // , sort: { column: "createdAt", order:'0' }
-   const [fetchBody, setFetchBody] = useState({ paths: [], pagination: { size: defaultSize, number: 1 } });
+   const [ fetchBody, setFetchBody ] = useState({ paths: [], type: 'image', pagination: { size: defaultSize, number: 1 } });
 
    // webId -- damjuuldag bolno
    const setFocus = (data) => {
@@ -84,7 +84,7 @@ const MediaIndex = ({ page, setImage, onCancel, open, webId = getWebId(), access
 
    useEffect(() => {
       fetch();
-   }, [fetchBody.paths?.length, fetchBody.pagination?.number, fetchBody.pagination?.size]);
+   }, [fetchBody.paths?.length, fetchBody.pagination?.number, fetchBody.pagination?.size, fetchBody.type]);
 
    useEffect(() => {
       new Promise(() => {
@@ -115,8 +115,6 @@ const MediaIndex = ({ page, setImage, onCancel, open, webId = getWebId(), access
    const ctxProps = { mainUrl:mainUrl, webId:webId , jwt:accessToken }
 
    const themes = useMemo(() => JSON.parse(localStorage.getItem('theme_asset')),[])
-
-
 
    return (
       <ThemeProvider theme={{ ...config, ...themes }}>

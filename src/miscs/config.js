@@ -10,7 +10,7 @@ export const config = {
 }
 
 export const titles = {
-    main: "Media Library",
+    main: "Файлын сан",
     detail: "Файлын дэлгэрэнгүй",
     upload: "Файл нэмэх",
     folder: "Хавтас үүсгэх",

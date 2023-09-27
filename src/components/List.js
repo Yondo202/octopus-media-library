@@ -1,7 +1,8 @@
 import React from "react";
 import styled from "styled-components";
 import Svg from '../miscs/svg'
-import { SecondaryButton } from "./MainWrapper";
+// import { SecondaryButton } from "./MainWrapper";
+import { fileTypes } from "../miscs/enums";
 import { EmptyComponent } from "./Grid";
 // import Pagination from "./Pagination";
 
@@ -44,7 +45,7 @@ const List = ({ media, setFocus, setImage, handleFolder, editFolder }) => {
                             <tr key={i} onClick={() => setImage?.({ _id:data.id, ...data._source })}>
                                 <td>
                                     <div className="preview">
-                                        <img src={data._source.url} alt='img' />
+                                        {data?._source?.type === fileTypes.file ? <Svg name={data._source.ext} size="0.7rem" /> : <img src={data._source.url} alt='img' /> }
                                     </div>
                                 </td>
                                 <td>{data._source.title}</td>

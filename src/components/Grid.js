@@ -6,7 +6,7 @@ import { useLoad } from '../context/MediaCtx';
 import FileImg from "../miscs/img/image.png"
 import axios from "axios";
 import ImageCard from "../miscs/ImageCard";
-import { InsertImage, UploadImage, acceptedImageTypes } from '../miscs/UploadFunc';
+import { InsertImage, UploadImage } from '../miscs/UploadFunc';
 // import Pagination from "./Pagination"; // footer baigaa
 
 const initial = { active: false, loading: false };
@@ -34,7 +34,7 @@ const Grid = ({ setFocus, setImage, media, handleFolder, editFolder, fetchBody }
       setFocus({ _uploaded_back: true });
       return uploadedData
     }finally{
-      console.log("finish anyway")
+      console.log("finish")
     }
   };
 
@@ -190,7 +190,7 @@ const Grid = ({ setFocus, setImage, media, handleFolder, editFolder, fetchBody }
           onDragOver={e =>( e.preventDefault())}
           onDragEnter={onDragEnter}
         >
-          <h5>Зураг ({fetchBody.pagination.total})</h5>
+          <h5>Нийт ({fetchBody.pagination.total})</h5>
           <div  className="files">
             {media?.images?.data?.map((data, i) => (
               <ImageCard

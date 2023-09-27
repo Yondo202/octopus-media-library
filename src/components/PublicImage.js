@@ -32,11 +32,11 @@ const PublicImage = ({ Header, headerProps, setImage, page }) => {
     try {
       if(props.type ==='image'){
         const res = await axios.get(`https://api.pexels.com/v1/search?query=${props.input}&per_page=60&page=1`, token );
-        setPhotos({ ...res.data, photos:toColumns(res.data?.photos, 4) });
+        setPhotos({ ...res.data, photos:toColumns(res.data?.photos, page?6:5) });
       }else{
         //video search
         const res = await axios.get(`https://api.pexels.com/videos/search?query=${props.input}&per_page=30&page=1`, token );
-        setVideos({ ...res.data, videos:toColumns(res.data?.videos, 4) });
+        setVideos({ ...res.data, videos:toColumns(res.data?.videos, 5) });
         // setVideos(res.data);
       }
       
@@ -70,8 +70,6 @@ const PublicImage = ({ Header, headerProps, setImage, page }) => {
     }
   }
 
-  // <video ref="vidRef" src="some.mp4" type="video/mp4"></video>
-
   const SVG = ({name}) => <Svg name={name} color="#666687" size="1.3rem" />
 
   const PublicHeader = () => {
@@ -90,10 +88,10 @@ const PublicImage = ({ Header, headerProps, setImage, page }) => {
               <span className="type_text">{searchVal.type === "video"?`Видео`:`Зураг`}</span>
               <div className="select_par">
                 <div onClick={() =>setSearchVal(prev=>({ ...prev, type:'image' }))} className="items">
-                  <SVG name="image_holder" /> <span>Зураг</span>
+                  <SVG name="image_holder" /> <span className="text_item">Зураг</span>
                 </div>
                 <div onClick={() =>setSearchVal(prev=>({ ...prev, type:'video' }))}  className="items">
-                  <SVG name="video" /> <span>Видео</span>
+                  <SVG name="video" /> <span className="text_item">Видео</span>
                 </div>
               </div>
             </div>
@@ -135,11 +133,11 @@ const PublicImage = ({ Header, headerProps, setImage, page }) => {
                   {item.map((el, ind) => {
                     return (
                       <div onClick={()=>selectImageHandle(el)} key={ind} className="image_box">
-                        <img loading="lazy" className="img" src={page ? el?.src?.large : el?.src?.medium} alt={el.photographer} />
+                        <img loading="lazy" className="img" src={el?.src?.medium} alt={el.photographer} />
                         <div className="ghost_div">
-                          <div className="download_img">
+                          {/* <div className="download_img">
                             <Svg color="#000" name="download" />
-                          </div>
+                          </div> */}
                         </div>
                       </div>
                     );
@@ -196,13 +194,17 @@ const PublicHeadStyle = styled.div`
           padding:10px;
           gap:10px;
           align-items:center;
+          .text_item{
+            color:${props=>props.theme.lightTextColor};
+          }
           &:hover{
             background-color:${props=>props.theme.bodyBackground};
           }
         }
       }
+      border:1px solid ${props=>props.theme.sectionBorderColor};
       &:hover{
-        border:1px solid ${props=>props.theme.sectionBorderColor};
+        
         .type_text{
           color:${props=>props.theme.mainColor};
         }
@@ -238,8 +240,6 @@ const PublicHeadStyle = styled.div`
 `
 
 const Container = styled.div`
-    // height:100%;
-    // overflow-y:scroll;
     color:${props=>props.theme.lightTextColor};
     .main{
       max-height: 530px !important;
@@ -263,7 +263,7 @@ const Container = styled.div`
             left:0;
             top:0;
             width:100%;
-            height:99%;
+            height:98%;
             z-index:2;
             display:flex;
             align-items:flex-end;

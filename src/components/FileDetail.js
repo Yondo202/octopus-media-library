@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import axios from "axios";
 import RouteHead from "../miscs/RouteHead";
+import Svg from "../miscs/svg";
+import { fileTypes } from "../miscs/enums";
 import { PrimaryButton } from "./MainWrapper"
 import { useLoad } from "../context/MediaCtx";
 
@@ -43,9 +45,15 @@ const Detail = ({ focus, setFocus, fetchBody }) => {
                     <div className="left">
                         <article className='ghost'>
                             <div className='image_sector'>
-                                <div className='box'>
-                                    <img src={image.url} alt='img' />
-                                </div>
+                                {image.type === fileTypes.file ? (
+                                    <div className="file_type">
+                                    <Svg name={image.ext} size="2rem"/>
+                                    </div>
+                                ) : (
+                                    <div className="box">
+                                    <img src={image.url} alt="img" />
+                                    </div>
+                                )}
                             </div>
                         </article>
                     </div>
@@ -59,6 +67,9 @@ const Detail = ({ focus, setFocus, fetchBody }) => {
                             <input onChange={onChange} type="text" value={image.alt} name="alt" required />
                         </div>
                         <div className="input-wrap">
+                            <div className="custom">Төрөл: <span>{image.type}</span></div>
+                        </div>
+                        <div className="input-wrap">
                             <div className="custom">Файлын байршил</div>
                             <RouteHead fetchBody={fetchBody}/>
                         </div>
@@ -67,7 +78,7 @@ const Detail = ({ focus, setFocus, fetchBody }) => {
             </div>
             <div className="footer">
                 {/* <SecondaryButton onClick={()=>setFocus({_back:true})}>Цуцлах</SecondaryButton> */}
-                <PrimaryButton danger onClick={()=>handleSubmit(image, "delete")}>Зураг устгах</PrimaryButton>
+                <PrimaryButton danger onClick={()=>handleSubmit(image, "delete")}>Устгах</PrimaryButton>
                 <PrimaryButton  onClick={()=>handleSubmit(image)}>Хадгалах</PrimaryButton>
             </div>
         </Container>
@@ -94,6 +105,8 @@ const Container = styled.div`
                 border: 1px ${props => props.theme.sectionBorderColor};
                 box-shadow: rgba(33, 33, 52, 0.1) 0px 1px 4px;
                 height: 100%;
+                display:flex;
+                flex-direction:column;
                 .image_sector{
                     position:relative;
                     -webkit-box-align: center;
@@ -104,6 +117,7 @@ const Container = styled.div`
                     justify-content: center;
                     height: 100%;
                     width: 100%;
+                    flex:1;
                     .box{
                         display: flex;
                         -webkit-box-pack: center;

@@ -1,13 +1,28 @@
 import axios from 'axios';
 
-export const acceptedImageTypes = ['image/gif', 'image/jpeg', 'image/png', 'image/svg+xml', "image/gif"];
+const acceptedImageTypes = ['image/gif', 'image/jpeg', 'image/png', 'image/svg+xml', "image/gif"];
+
+const documentTypes = [ 
+    'application/pdf', 'application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+]
+
+export const allTypes = acceptedImageTypes.concat(documentTypes)
+
+// const documentTypes = {
+//     'application/pdf': 'pdf',
+//     'application/vnd.ms-excel': 'xls',
+//     'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': 'xlsx',
+//     'application/msword': 'doc',
+//     'application/vnd.openxmlformats-officedocument.wordprocessingml.document':'docx',
+// };
 
 export const InsertImage = (file) => {
     let filEname = file.name?.slice(0, file.name?.lastIndexOf('.'));
      
     return new Promise((resolve) =>{
-        if (!acceptedImageTypes.includes(file.type)) {
-            return window.alert("Зөвхөн зураг хавсаргах боломжтой")
+        if (!allTypes.includes(file.type)) {
+            return window.alert("Хавсаргах боломжгүй файл байна!")
         }else {
             let imageUrl = URL.createObjectURL(file);
             const reader = new FileReader();
@@ -31,6 +46,7 @@ export const UploadImage = async ({ focus, fetchBody, jwt, webId, mainUrl, useLo
     if (fetchBody.paths?.length > 0) {
        formData.append('paths', JSON.stringify(fetchBody.paths));
     }
+    
     const token = { headers: { 'content-type': 'multipart/form-data', Authorization: `Bearer ${jwt}`, webId: webId } };
 
     try {
@@ -42,3 +58,12 @@ export const UploadImage = async ({ focus, fetchBody, jwt, webId, mainUrl, useLo
         useLoading(false);
     }
 }
+
+export const download = (data) => {
+    const link = document.createElement("a");
+    link.href = data.url;
+    link.download = data.title;
+    link.target = "_blank"
+    document.body.appendChild(link);
+    link.click();
+};

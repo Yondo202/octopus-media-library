@@ -12,16 +12,17 @@ import GlobalImage from "./PublicImage";
 
 const MainWrapper = ({ setImage, setFocus, searchData, page, loading, setFetchBody, fetchBody, setSearchData, renderData }) => {
     const { loading:globLoading } = useLoad()
-    const [ grid, setGrid ] = useState(false)
+    // const [ grid, setGrid ] = useState(false)
     // const [ mainType, setMainType ] = useState(page?`local`:'public')
-    const [ mainType, setMainType ] = useState('public')
+    // const [ mainType, setMainType ] = useState('public')
+    const [ mainType, setMainType ] = useState('local')
 
-    const toggleClass = () => {
-        if (grid === true)
-            setGrid(false)
-        else
-            setGrid(true)
-    }
+    // const toggleClass = () => {
+    //     if (grid === true)
+    //         setGrid(false)
+    //     else
+    //         setGrid(true)
+    // }
 
     const handleFolder = (data) => {
         setFetchBody(prev=> ({ ...prev, paths: [ ...prev.paths, { path:data.key, doc_count:data.doc_count, order: prev.paths.length + 1 } ] }))
@@ -34,10 +35,11 @@ const MainWrapper = ({ setImage, setFocus, searchData, page, loading, setFetchBo
     const editFolder = (data) =>{
         setFocus({ type: 'folder', data:data })
     }
-
     let props = { setFocus, setImage, media: searchData??{}, handleFolder, editFolder, fetchBody }
     let hrProp = { setFocus, setMainType, mainType, page }
 
+    let filterProps = {  fetchBody, setFetchBody, setSearchData, renderData }
+    // toggleClass, grid,
     // console.log(globLoading)
 
     return (
@@ -51,7 +53,7 @@ const MainWrapper = ({ setImage, setFocus, searchData, page, loading, setFetchBo
             :<>
             <PageHead {...hrProp} />
             <div className={`${!page && `body2`}`}>
-                <Filter toggleClass={toggleClass} grid={grid} fetchBody={fetchBody} setSearchData={setSearchData} renderData={renderData} />
+                <Filter {...filterProps} />
 
                 {!searchData?.search && <div className="route_head">
                     {fetchBody.paths.length !== 0 &&<><div onClick={() =>setFetchBody(prev=>({ ...prev, paths:[] }))} className="text">{ST['home']}</div>
@@ -70,7 +72,8 @@ const MainWrapper = ({ setImage, setFocus, searchData, page, loading, setFetchBo
             <div className={`${!page && `main`}`}>
                 <div className={`${!page && `media-modal`}`}>
                     {(page && globLoading) && <Loading withGhost local={true} />}
-                    { loading ? <Loading local={true} /> : grid ? <List {...props} /> : <Grid {...props} />} 
+                    {/* { loading ? <Loading local={true} /> : grid ? <List {...props} /> : <Grid {...props} />}  */}
+                    { loading ? <Loading local={true} /> : <Grid {...props} />} 
                     { fetchBody.pagination?.total > defaultSize && !searchData?.search && <Pagination fetchBody={fetchBody} setFetchBody={setFetchBody} />}
                 </div>
             </div></> }
@@ -328,13 +331,11 @@ const TabStyle = styled.div`
     gap:12px;
     .item{
         position:relative;
-        // background-color:grey;
         padding:10px 15px;
-        font-size:14px;
+        font-size:12px;
         font-weight:600;
         cursor:pointer;
         color: ${props => props.theme.lightTextColor};
-        // text-transform:uppercase;
         border-radius:8px;
         &:hover{
             background-color:rgba(0,0,0,0.037);
@@ -358,7 +359,7 @@ const TabStyle = styled.div`
     }
 `
 
-const Button = styled.div`
+export const Button = styled.div`
     padding:10px 20px;
     align-items: center;
     gap: 10px;

@@ -60,8 +60,6 @@ const Detail = ({ }) => {
         }
     };
 
-    console.log(focus.data?._source, "heheh")
-
     return (
         <div >
             {/* <ReactCrop
