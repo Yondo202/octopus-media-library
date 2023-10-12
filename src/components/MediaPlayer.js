@@ -1,9 +1,9 @@
 import React from "react";
 import styled from "styled-components";
 
-const MediaPlayer = ({ data }) => {
+const MediaPlayer = ({ data, setImage }) => {
   return (
-    <Container className="image_box">
+    <Container className="image_box" onClick={()=>setImage(data)}>
       <video
         width="100%"
         height="100%"

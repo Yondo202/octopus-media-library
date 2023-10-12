@@ -5,17 +5,17 @@ import Loading from "../miscs/Loading";
 import Svg from '../miscs/svg'
 import Filter from "./Filter"; // tur hadgalna
 import { ST, defaultSize } from "../miscs/config";
-import List from "./List";
+// import List from "./List";
 import { useLoad } from "../context/MediaCtx";
 import Pagination from "./Pagination";
 import GlobalImage from "./PublicImage";
 
-const MainWrapper = ({ setImage, setFocus, searchData, page, loading, setFetchBody, fetchBody, setSearchData, renderData }) => {
+const MainWrapper = ({ setImage, setFocus, searchData, page, loading, setFetchBody, fetchBody, setSearchData, renderData, type }) => {
     const { loading:globLoading } = useLoad()
     // const [ grid, setGrid ] = useState(false)
     // const [ mainType, setMainType ] = useState(page?`local`:'public')
     // const [ mainType, setMainType ] = useState('public')
-    const [ mainType, setMainType ] = useState('local')
+    const [ mainType, setMainType ] = useState('public')
 
     // const toggleClass = () => {
     //     if (grid === true)
@@ -37,10 +37,7 @@ const MainWrapper = ({ setImage, setFocus, searchData, page, loading, setFetchBo
     }
     let props = { setFocus, setImage, media: searchData??{}, handleFolder, editFolder, fetchBody }
     let hrProp = { setFocus, setMainType, mainType, page }
-
     let filterProps = {  fetchBody, setFetchBody, setSearchData, renderData }
-    // toggleClass, grid,
-    // console.log(globLoading)
 
     return (
         <Container>
@@ -48,35 +45,36 @@ const MainWrapper = ({ setImage, setFocus, searchData, page, loading, setFetchBo
             { mainType === 'public' 
             ? <>
                 <Loading withGhost local={globLoading} />
-                <GlobalImage setImage={setImage} Header={PageHead} headerProps={hrProp} page={page} /> 
+                <GlobalImage setImage={setImage} Header={PageHead} headerProps={hrProp} page={page} type={type} /> 
             </>
             :<>
-            <PageHead {...hrProp} />
-            <div className={`${!page && `body2`}`}>
-                <Filter {...filterProps} />
+                <PageHead {...hrProp} />
+                <div className={`${!page && `body2`}`}>
+                    <Filter {...filterProps} />
 
-                {!searchData?.search && <div className="route_head">
-                    {fetchBody.paths.length !== 0 &&<><div onClick={() =>setFetchBody(prev=>({ ...prev, paths:[] }))} className="text">{ST['home']}</div>
-                    <span className="slash">/</span></> }
-                    {fetchBody.paths?.map((el, ind) =>{
-                        return(
-                            <React.Fragment key={ind}>
-                                <div onClick={()=>linkFunc(el)} className={`text ${ind === fetchBody.paths?.length - 1 ?`active`:``}`}>{el.path} </div>
-                                <span className="slash">{ind !== fetchBody.paths?.length - 1 ?` / `:``}</span>
-                            </React.Fragment>
-                        )
-                    })}
-                </div>}
+                    {!searchData?.search && <div className="route_head">
+                        {fetchBody.paths.length !== 0 &&<><div onClick={() =>setFetchBody(prev=>({ ...prev, paths:[] }))} className="text">{ST['home']}</div>
+                        <span className="slash">/</span></> }
+                        {fetchBody.paths?.map((el, ind) =>{
+                            return(
+                                <React.Fragment key={ind}>
+                                    <div onClick={()=>linkFunc(el)} className={`text ${ind === fetchBody.paths?.length - 1 ?`active`:``}`}>{el.path} </div>
+                                    <span className="slash">{ind !== fetchBody.paths?.length - 1 ?` / `:``}</span>
+                                </React.Fragment>
+                            )
+                        })}
+                    </div>}
 
-            </div>
-            <div className={`${!page && `main`}`}>
-                <div className={`${!page && `media-modal`}`}>
-                    {(page && globLoading) && <Loading withGhost local={true} />}
-                    {/* { loading ? <Loading local={true} /> : grid ? <List {...props} /> : <Grid {...props} />}  */}
-                    { loading ? <Loading local={true} /> : <Grid {...props} />} 
-                    { fetchBody.pagination?.total > defaultSize && !searchData?.search && <Pagination fetchBody={fetchBody} setFetchBody={setFetchBody} />}
                 </div>
-            </div></> }
+                <div className={`${!page && `main`}`}>
+                    <div className={`${!page && `media-modal`}`}>
+                        {(page && globLoading) && <Loading withGhost local={true} />}
+                        {/* { loading ? <Loading local={true} /> : grid ? <List {...props} /> : <Grid {...props} />}  */}
+                        { loading ? <Loading local={true} /> : <Grid {...props} />} 
+                        { fetchBody.pagination?.total > defaultSize && !searchData?.search && <Pagination fetchBody={fetchBody} setFetchBody={setFetchBody} />}
+                    </div>
+                </div>
+            </> }
 
             {!page && <div className="footer">
                 <SecondaryButton onClick={() => setFocus({ _back: true })} >Цуцлах</SecondaryButton>

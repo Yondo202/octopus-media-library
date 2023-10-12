@@ -1,6 +1,6 @@
 {
   "name": "siro-media-library",
-  "version": "0.2.93",
+  "version": "0.2.95",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.es.js",

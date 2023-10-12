@@ -146,7 +146,7 @@ const Grid = ({ setFocus, setImage, media, handleFolder, editFolder, fetchBody }
 
   return (
     <Container 
-      onDragEnter={MainEnter} 
+      onDragEnter={MainEnter}
       onDragOver={e => e.preventDefault()} 
       // onDragLeave={MainDragLeave}
     >
@@ -347,8 +347,8 @@ const Container = styled.div`
 `;
 
 export const EmptyComponent = ({ media, setFocus, dragProps }) =>{
-  console.log(dragProps, "props")
-  if(media?.images?.data?.length === 0 && media?.images?.data?.length === 0){
+  // console.log(media?.images?.data?.length, "props-------->")
+  if(!media?.images?.data?.length){
     return(
       <EmptyStyle {...dragProps}>
         <h5>Мэдээлэл алга байна...</h5>

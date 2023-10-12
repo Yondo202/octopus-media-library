@@ -32,10 +32,11 @@ const getJwt = () => {
 // theme_asset - localstorage {}
 const mainUrl = "https://content-service.siro.mn"
 // const mainUrl = "http://192.168.230.160:3003"
-// const testToken = `eyJraWQiOiJsU2RNcWtQbHFzc0dOVzJUejJkeDMrWjVGejR6U2UrUkFBNFwvanZKRWFcL009IiwiYWxnIjoiUlMyNTYifQ.eyJzdWIiOiJjM2VkMTBiYi1kNTc1LTQ5ZTItODUyMi1kMDcwYzdlOGRiZmEiLCJpc3MiOiJodHRwczpcL1wvY29nbml0by1pZHAuYXAtc291dGhlYXN0LTEuYW1hem9uYXdzLmNvbVwvYXAtc291dGhlYXN0LTFfbDZEUDZaYnV2IiwiY2xpZW50X2lkIjoiMmtiN3VrdnY2Ymk4YnBtZW9nNHYxdjQ4dWYiLCJvcmlnaW5fanRpIjoiNDJmNjRmZTgtMzQ4NS00ODQ2LTlmNDItNGQ2MWUzNzdmNjkzIiwiZXZlbnRfaWQiOiIwMGYwNWM3Mi1mODQ1LTQ5YTQtOWQ3MC0wYzc0MjIyNjEzZTkiLCJ0b2tlbl91c2UiOiJhY2Nlc3MiLCJzY29wZSI6ImF3cy5jb2duaXRvLnNpZ25pbi51c2VyLmFkbWluIiwiYXV0aF90aW1lIjoxNjk1Nzc2MDEzLCJleHAiOjE2OTU4NjI0MTMsImlhdCI6MTY5NTc3NjAxMywianRpIjoiZDQxMzhlNDItNDgxNC00ZGYwLTlkODEtNDJiOTQ1NjBjMjZhIiwidXNlcm5hbWUiOiI5MDgwMDE1MCJ9.WwRS8ixfPbvZMSixCT7XyUrCAGno3NGVNMtV7kWt9qC-2eW0sD2-EYKTsNP_yA-NheoUWie2IKDsJHfN_5Etyz9L6nrp34bo-zZ4Gq4uWPTMQoDSMEMEyvv3XhY_0CZxoQDyd4Vap71_OW8N8uaQhU269sSLvMs98vXR330Fkznvcn2UL7qXMwvgtlHllqaAbc9VJgPrxOd-LWQ_Nyc9AG_N7AaDuPR6buUFer9qkQI80T9GH1LUmkVgQa6Hu2kWRoCV9TkO1nuWJtAMIUg9oi618juIPPTarw6PTsnP4r0EFRwy3VFTRI-DfJGKU2OuXYHQwsRllhvA7QXBGXOOWg`
-// const testWebid = `ed3cc972-e978-44b7-aeab-5b25d5fd7124`
+// const testToken = `eyJraWQiOiJsU2RNcWtQbHFzc0dOVzJUejJkeDMrWjVGejR6U2UrUkFBNFwvanZKRWFcL009IiwiYWxnIjoiUlMyNTYifQ.eyJzdWIiOiJhN2U1MjlhNy0zY2U4LTRiN2UtOGE4Zi02YzM1ZWVjYTJiOGIiLCJpc3MiOiJodHRwczpcL1wvY29nbml0by1pZHAuYXAtc291dGhlYXN0LTEuYW1hem9uYXdzLmNvbVwvYXAtc291dGhlYXN0LTFfbDZEUDZaYnV2IiwiY2xpZW50X2lkIjoiMmtiN3VrdnY2Ymk4YnBtZW9nNHYxdjQ4dWYiLCJvcmlnaW5fanRpIjoiYzA5MGI1NGYtYzEwNy00YTIzLWJlNGUtOGIyN2E1MGFlMThmIiwiZXZlbnRfaWQiOiJkMzY2NWY5MS04NTk1LTRmODAtOWRmYS1jYjhhNGEyOTU0MjIiLCJ0b2tlbl91c2UiOiJhY2Nlc3MiLCJzY29wZSI6ImF3cy5jb2duaXRvLnNpZ25pbi51c2VyLmFkbWluIiwiYXV0aF90aW1lIjoxNjk3MTA2MzIwLCJleHAiOjE2OTcxOTI3MjAsImlhdCI6MTY5NzEwNjMyMCwianRpIjoiM2E0ZTcwM2UtN2ZlNy00NjQ2LTkxYmUtMGQ0YzcyZGE5MTM1IiwidXNlcm5hbWUiOiI5NDAwMzc4NyJ9.DgRbjVWirYM2MmpnL6Ab3Y1zEnsVczCUrOX76hw8KByThHgR3gvQY7wdYKo57-E6ZIWJ_fz36wxJPsAFOVveLXB2v78sIXezNvB37GNJ_iWMfaldsubhVZ1woSsPt8RFkpUT1rUGRp0RK4WJwfnluTbWamfzAp4WyoO-OjbhCa1w8uKISMKRzd3Mi3zIqjNoaXlAFPbhoIsO25vHLqS9reBVtRarJqMzc1seudnU_gdodqPIib6BCvlCwve7K8c2FDlomeIDgUprEnfwQVuOECoS0-fk5ZG_WWUsKEp14_achnWv5PfAARq9rCTLDQ9ggeowTngv17TQoTplt-pX4A`
+// const testWebid = `fdd0b9f6-0210-4570-bb4e-9e709b00725d`
+// ['image, video']
 
-const MediaIndex = ({ page, setImage, onCancel, open, webId = getWebId(), accessToken = getJwt() }) => {
+const MediaIndex = ({ page, setImage, onCancel, open, type="image", webId = getWebId(), accessToken = getJwt() }) => {
    const [ loading, setLoading ] = useState(false); // use global load
    const [ focus, setFocusState ] = useState(initial);
    const [ searchData, setSearchData] = useState({});
@@ -103,7 +104,7 @@ const MediaIndex = ({ page, setImage, onCancel, open, webId = getWebId(), access
    const Details = {
       main: {
          Component: (props) => <MainWrapper {...props} />,
-         page, searchData, setImage, loading, setFetchBody, fetchBody, setSearchData, renderData
+         page, searchData, setImage, loading, setFetchBody, fetchBody, setSearchData, renderData, type
       },
       detail: { Component: (props) => <FileDetail {...props} />, focus, fetchBody },
       upload: { Component: (props) => <MediaUpload {...props} /> },

@@ -1,5 +1,6 @@
 export const config = {
-    mainColor: "#4945ff",
+    // mainColor: "#4945ff",
+    mainColor: "rgb(4, 150, 255)",
     lightMainColor:'#f0f0ff',
     lightTextColor: "#666687",
     textColor: '#4a5360',
