@@ -15,7 +15,7 @@ const MainWrapper = ({ setImage, setFocus, searchData, page, loading, setFetchBo
     // const [ grid, setGrid ] = useState(false)
     // const [ mainType, setMainType ] = useState(page?`local`:'public')
     // const [ mainType, setMainType ] = useState('public')
-    const [ mainType, setMainType ] = useState('public')
+    const [ mainType, setMainType ] = useState('local')
 
     // const toggleClass = () => {
     //     if (grid === true)
