@@ -41,7 +41,8 @@ const Folder = ({ setFocus, focus, fetchBody }) => {
          }
          setFocus({ _uploaded_back: true });
       } catch (err) {
-         console.log(err);
+         // console.log(err);
+         return
       } finally {
          useLoading(false);
       }

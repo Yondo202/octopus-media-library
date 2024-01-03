@@ -50,7 +50,8 @@ const PublicImage = ({ Header, headerProps, setImage, page, type }) => {
         // setVideos(res.data);
       }
     } catch (err) {
-      console.log(err, "err");
+      // console.log(err, "err");
+      return
     } finally {
       useLoading(false);
     }
@@ -203,7 +204,13 @@ const PublicImage = ({ Header, headerProps, setImage, page, type }) => {
                   );
                 })}
           </div>
-          {size < 100 && <StyledButton onClick={() => setSize(prev=> prev > 100 ? prev : prev + 30)}><button >Цааш үзэх</button></StyledButton>}
+          {size < 100 && (
+            <StyledButton
+              onClick={() => setSize((prev) => (prev > 100 ? prev : prev + 30))}
+            >
+              <button>Цааш үзэх</button>
+            </StyledButton>
+          )}
         </div>
       </Container>
     </>
@@ -213,22 +220,22 @@ const PublicImage = ({ Header, headerProps, setImage, page, type }) => {
 export default PublicImage;
 
 const StyledButton = styled.div`
-  width:100%;
-  display:flex;
-  justify-content:center;
-  padding-bottom:50px;
-  button{
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding-bottom: 50px;
+  button {
     border: 1px solid ${(props) => props.theme.sectionBorderColor};
-    padding:12px 0px;
-    border-radius:10px;
-    width:300px;
-    cursor:pointer;
-    &:hover{
-      color:#fff;
-      background-color:${(props) => props.theme.mainColor};
+    padding: 12px 0px;
+    border-radius: 10px;
+    width: 300px;
+    cursor: pointer;
+    &:hover {
+      color: #fff;
+      background-color: ${(props) => props.theme.mainColor};
     }
   }
-`
+`;
 
 const animate = keyframes`
     0% { transform:scale(0.8); opacity:0;  }
@@ -258,19 +265,24 @@ const PublicHeadStyle = styled.div`
         top: 105%;
         width: 100%;
         left: 0;
-        background-color: #fff;
         border: 1px solid ${(props) => props.theme.sectionBorderColor};
         border-radius: 8px;
         padding: 10px 0px;
         z-index: 100;
         box-shadow: 1px 1px 10px -5px;
         display: none;
+        background-color: ${(props) => props.theme.bodyBackground};
         .items {
           display: flex;
           padding: 10px;
           gap: 10px;
           align-items: center;
+          color: ${(props) => props.theme.lightTextColor};
           .text_item {
+            color: ${(props) => props.theme.lightTextColor};
+          }
+          svg {
+            fill: ${(props) => props.theme.lightTextColor};
             color: ${(props) => props.theme.lightTextColor};
           }
           &:hover {
@@ -295,9 +307,12 @@ const PublicHeadStyle = styled.div`
       input {
         padding: 12px 10px;
         border: none;
-        background-color: ${(props) => props.theme.bodyBackground};
+        background-color: ${(props) => props.theme.bgHover};
         // outline:none;
         width: 300px;
+        &:hover {
+          background-color: ${(props) => props.theme.lightMainColor};
+        }
       }
       .search_svg {
         outline: none;
@@ -356,6 +371,7 @@ const Container = styled.div`
         }
         .img {
           width: 100%;
+          height: auto;
           border-radius: 10px;
           transition: all 0.3s ease;
           transform: scale(1);

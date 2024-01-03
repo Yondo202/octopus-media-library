@@ -1,6 +1,6 @@
 export const config = {
     // mainColor: "#4945ff",
-    mainColor: "rgb(4, 150, 255)",
+    mainColor: "#0f62e6",
     lightMainColor:'#f0f0ff',
     lightTextColor: "#666687",
     textColor: '#4a5360',
@@ -8,6 +8,7 @@ export const config = {
     bodyBackground:"#f6f6f9",
     boxBackground: "#fff",
     maskBackground: "rgba(0, 0, 0, 0.45)",
+    bgHover: '#f4f7ff', //#e3e7ed - left menu bg
 }
 
 export const titles = {

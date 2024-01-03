@@ -7,6 +7,8 @@ import image from '@rollup/plugin-image';
 
 export default [
   {
+    external: ['styled-components'],
+    globals: { 'styled-components': 'styled' },
     input: './src/index.js',
     output: [
       {

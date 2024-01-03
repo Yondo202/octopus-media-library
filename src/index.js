@@ -38,11 +38,11 @@ const mainUrl = `https://${getUrl()??`content-service.siro.mn`}`
 
 
 // const mainUrl = "http://192.168.230.160:3003"
-// const testToken = `eyJraWQiOiJsU2RNcWtQbHFzc0dOVzJUejJkeDMrWjVGejR6U2UrUkFBNFwvanZKRWFcL009IiwiYWxnIjoiUlMyNTYifQ.eyJzdWIiOiJhN2U1MjlhNy0zY2U4LTRiN2UtOGE4Zi02YzM1ZWVjYTJiOGIiLCJpc3MiOiJodHRwczpcL1wvY29nbml0by1pZHAuYXAtc291dGhlYXN0LTEuYW1hem9uYXdzLmNvbVwvYXAtc291dGhlYXN0LTFfbDZEUDZaYnV2IiwiY2xpZW50X2lkIjoiMmtiN3VrdnY2Ymk4YnBtZW9nNHYxdjQ4dWYiLCJvcmlnaW5fanRpIjoiYzA5MGI1NGYtYzEwNy00YTIzLWJlNGUtOGIyN2E1MGFlMThmIiwiZXZlbnRfaWQiOiJkMzY2NWY5MS04NTk1LTRmODAtOWRmYS1jYjhhNGEyOTU0MjIiLCJ0b2tlbl91c2UiOiJhY2Nlc3MiLCJzY29wZSI6ImF3cy5jb2duaXRvLnNpZ25pbi51c2VyLmFkbWluIiwiYXV0aF90aW1lIjoxNjk3MTA2MzIwLCJleHAiOjE2OTcxOTI3MjAsImlhdCI6MTY5NzEwNjMyMCwianRpIjoiM2E0ZTcwM2UtN2ZlNy00NjQ2LTkxYmUtMGQ0YzcyZGE5MTM1IiwidXNlcm5hbWUiOiI5NDAwMzc4NyJ9.DgRbjVWirYM2MmpnL6Ab3Y1zEnsVczCUrOX76hw8KByThHgR3gvQY7wdYKo57-E6ZIWJ_fz36wxJPsAFOVveLXB2v78sIXezNvB37GNJ_iWMfaldsubhVZ1woSsPt8RFkpUT1rUGRp0RK4WJwfnluTbWamfzAp4WyoO-OjbhCa1w8uKISMKRzd3Mi3zIqjNoaXlAFPbhoIsO25vHLqS9reBVtRarJqMzc1seudnU_gdodqPIib6BCvlCwve7K8c2FDlomeIDgUprEnfwQVuOECoS0-fk5ZG_WWUsKEp14_achnWv5PfAARq9rCTLDQ9ggeowTngv17TQoTplt-pX4A`
-// const testWebid = `fdd0b9f6-0210-4570-bb4e-9e709b00725d`
+const testToken = `eyJraWQiOiJ3Z2dvTjU2cDZwbXhyRHl5bm1PQjZiWU5MS3dqQTYySHRBSXRveDJPcVRvPSIsImFsZyI6IlJTMjU2In0.eyJzdWIiOiIyZmRkYjYxMy1lOWQ2LTRlNTktYTkwYi1hZDk1NjViYzQ2ZjIiLCJpc3MiOiJodHRwczpcL1wvY29nbml0by1pZHAuYXAtc291dGhlYXN0LTEuYW1hem9uYXdzLmNvbVwvYXAtc291dGhlYXN0LTFfUThERUxpc0dmIiwiY2xpZW50X2lkIjoiMjBtbmM2Z21pcWppa3VtN2lxdGJ1YmtkOXQiLCJvcmlnaW5fanRpIjoiMGVhNjIzYzUtNjc0NC00ZmFjLTgwNTMtNDkxYmQyMGEyYzBmIiwiZXZlbnRfaWQiOiJiZTdhYmNhMC1jMjc5LTQxYzItODFiOC1hMzg3NzcyOTFjNWYiLCJ0b2tlbl91c2UiOiJhY2Nlc3MiLCJzY29wZSI6ImF3cy5jb2duaXRvLnNpZ25pbi51c2VyLmFkbWluIiwiYXV0aF90aW1lIjoxNzAzNzI3OTczLCJleHAiOjE3MDQzNDQ5OTcsImlhdCI6MTcwNDI1ODU5NywianRpIjoiNTM0NmJkZDUtNDAzNS00ZmI2LWE1OTYtZGEzZDVkZTI0YjZjIiwidXNlcm5hbWUiOiI5OTgwMTQwNiJ9.dhZTT8opiLbzbW3AaJJt3IXmwpwv0D0IkG7Ps7I80QFtA8srA3DOtq1Xs8lLoy2uggovRw1ZmqKKVqZyhtWumfujapBPF8jXVwgtKOK2NyzILioZvDdC-A7Y32zZnWMJIGou_UvEmpVgzX4RYRX5XONvv8JhfjMVz7WK5V1UT7b7dEve1LJJKtBavP55kuQWrpB6Q6XFICPp39gG-qlFA31boCWsTwm3oteG7Vc0IhV4CTQUKcTZclXw2lvx-1yJsPArjElNAgIh0axzPTlDnAaUYNKZ3oXmiD08qmWZUxGbOBEkdtydHUWA9qXVpkeLqJLq01XpO_F-Gm-3LUH92Q`
+const testWebid = `2f8e1f38-0c3f-4422-bdd7-9fb773ec9bbb`
 // ['image, video']
 
-const MediaIndex = ({ page, setImage, onCancel, open, type="image", webId = getWebId(), accessToken = getJwt() }) => {
+const MediaIndex = ({ page, setImage, onCancel, open = true, type="image", webId = testWebid, accessToken = testToken }) => {
    const [ loading, setLoading ] = useState(false); // use global load
    const [ focus, setFocusState ] = useState(initial);
    const [ searchData, setSearchData] = useState({});
@@ -78,7 +78,8 @@ const MediaIndex = ({ page, setImage, onCancel, open, type="image", webId = getW
             setFetchBody((prev) => ({ ...prev, pagination: res.data.data.images?.pagination }));
          }
       } catch (err) {
-         console.log(err, 'err');
+         return
+         // console.log(err, 'err');
       } finally {
          setLoading(false);
       }
@@ -143,6 +144,7 @@ export default MediaIndex;
 const Container = styled.div`
    position: relative;
    padding-bottom: ${(props) => (props.page ? `70px` : `0px`)};
+   // transform:translateY(-10px);
    .one_line{
       text-overflow: ellipsis;
       white-space: nowrap;
