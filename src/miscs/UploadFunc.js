@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const acceptedImageTypes = ['image/gif', 'image/jpeg', 'image/png', 'image/svg+xml', "image/gif"];
+const acceptedImageTypes = ['image/gif', 'image/jpeg', 'image/png', 'image/svg+xml', "image/gif", "image/webp"];
 
 const documentTypes = [ 
     'application/pdf', 'application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',

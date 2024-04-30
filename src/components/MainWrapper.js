@@ -36,12 +36,12 @@ const MainWrapper = ({ setImage, setFocus, searchData, page, loading, setFetchBo
         setFocus({ type: 'folder', data:data })
     }
     let props = { setFocus, setImage, media: searchData??{}, handleFolder, editFolder, fetchBody }
-    let hrProp = { setFocus, setMainType, mainType, page }
+    let hrProp = { setFocus, setMainType, mainType, page, setImage }
     let filterProps = {  fetchBody, setFetchBody, setSearchData, renderData }
 
     return (
         <Container>
-            {/* {page ? <PageHead {...hrProp} /> : <ModalHead {...hrProp} />} */}
+           
             { mainType === 'public' 
             ? <>
                 <Loading withGhost local={globLoading} />
@@ -305,11 +305,23 @@ const Container = styled.div`
     
 `
 // daraa ene 2 iig 1 bolgo
-const PageHead = ({ setFocus, setMainType, mainType, page, Render }) => {
+const PageHead = ({ setFocus, setMainType, mainType, page, Render, setImage }) => {
+    const [ linkContet, setLinkContet ] = useState({ isOpen:false, value:'' })
     return (
         <div className={`${page ? `head_title`: `tab-wrap`}`}>
             {/* <div className="text">Медиа файл</div> */}
             <TabStyle >
+                <StyledLink>
+                    {!page && <span onClick={()=>setLinkContet({ isOpen:!linkContet.isOpen, value:'' })} ><Svg name="link" size="100%" /></span>}
+                    
+                    {linkContet.isOpen && <div className="content">
+                        <input value={linkContet.value} onChange={(e)=>setLinkContet({ isOpen:true, value:e.target.value })} type="text" placeholder="https://..." />
+
+                        {linkContet.value && <img className="image" src={linkContet.value} alt="icon" />}
+                        <Button onClick={()=>setImage?.({ url: linkContet.value })} className="custom_inp">Хадгалах</Button>
+                    
+                    </div>}
+                </StyledLink>
                 <div onClick={()=>setMainType(`public`)} className={`item ${mainType==='public'&&`active_item`}`}>Нээлттэй</div>
                 <div onClick={()=>setMainType(`local`)}  className={`item ${mainType==='local'&&`active_item`}`}>Хувийн</div>
             </TabStyle>
@@ -319,10 +331,62 @@ const PageHead = ({ setFocus, setMainType, mainType, page, Render }) => {
                 <Button onClick={() => setFocus({ type: 'folder' })}><Svg name="add" size="0.7rem" /> Шинэ хавтас үүсгэх</Button>
                 <PrimaryButton onClick={() => setFocus({ type: 'upload' })}><Svg name="add" size="0.7rem" color={"#fff"} /> Шинэ файл нэмэх</PrimaryButton>
             </div>}
-            
         </div>
     )
 }
+
+const StyledLink = styled.div`
+   width: 32px;
+   height: 32px;
+   border-radius: 50%;
+   border: 1px solid transparent;
+   position: relative;
+   &:hover{
+    border: 1px solid ${(props) => props.theme.sectionBorderColor};
+    background-color: ${(props) => props.theme.bgHover};
+   }
+   svg{
+     cursor: pointer;
+
+   }
+   .content{
+        position: absolute;
+        top: 40px;
+        left: 0;    
+        padding: 20px 15px;
+        z-index: 3;
+        background-color: ${(props) => props.theme.boxBackground};
+        /* width: 100px; */
+        border: 1px solid ${(props) => props.theme.sectionBorderColor};
+        border-radius: 5px;
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        .image{
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 5px;
+        }
+        .custom_inp{
+            width: min-content;
+            margin-left: auto;
+            padding: 6px 20px;
+            &:hover{
+                background-color: ${(props) => props.theme.mainColor};
+                color: #fff;
+            }
+        }
+        input {
+            padding: 7px 12px;
+            border-radius: 4px;
+            border: 1px solid ${(props) => props.theme.sectionBorderColor};
+            width: 240px;
+          
+         }
+   }
+`
 
 const TabStyle = styled.div`
     displaY:flex;
@@ -362,13 +426,14 @@ export const Button = styled.div`
     align-items: center;
     gap: 10px;
     display: flex;
-    border-radius: 4px;
+    border-radius: 8px;
     background: ${props => props.theme.lightMainColor};
     color: ${props => props.theme.mainColor};
     font-weight: 700;
     cursor: pointer;
     font-size: 12px;
     border: 1px solid ${props => props.theme.sectionBorderColor};
+    letter-spacing: 0.3px;
 `
 
 // const DeleteButton = styled.div`
